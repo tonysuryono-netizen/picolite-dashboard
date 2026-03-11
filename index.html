@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Picolite Service Management Dev-12/03 V0.1.1</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .hidden { display: none; }
+        
+        /* Login Card */
+        .login-card { 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05); 
+            border-radius: 2.5rem; 
+        }
+
+        /* HEADER BRANDING ALIGNMENT (JUSTIFIED) */
+        .header-brand-container {
+            width: 250px;
+            display: flex;
+            flex-direction: column;
+        }
+        .header-title-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            font-weight: 900;
+            color: #1e3a8a;
+            text-transform: uppercase;
+            font-size: 11px;
+            line-height: 1.2;
+            margin-top: 4px;
+            letter-spacing: -0.2px;
+        }
+        .header-title-row.sub {
+            font-size: 10px;
+            margin-top: 2px;
+            color: #1e3a8a;
+        }
+
+        /* Sidebar & Tab Active States */
+        .active-tab { 
+            border-bottom: 4px solid #1e40af; 
+            color: #1e40af; 
+            font-weight: 800; 
+        }
+        .sidebar-active { 
+            background-color: #f1f5f9; 
+            color: #1e40af; 
+            border-right: 4px solid #1e40af; 
+        }
+
+        /* Map Container */
+        .map-container { 
+            height: 500px; 
+            width: 100%; 
+            border-radius: 2.5rem; 
+            overflow: hidden; 
+            border: 8px solid white; 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); 
+        }
+
+        #map { height: 100%; width: 100%; z-index: 1; }
+
+        /* Custom Hover Effects */
+        .stat-card:hover {
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="text-gray-900 overflow-x-hidden">
+
+    <section id="login-page" class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-[480px] p-12 login-card">
+            <div class="text-center mb-8">
+                <div class="flex justify-center mb-4">
+                    <img src="PICOLITE LOGO HAKI copy.png" alt="Picolite Logo" class="h-20">
+                </div>
+                <h1 class="text-2xl font-bold text-[#1e3a8a]">Service Management Dashboard</h1>
+            </div>
+
+            <form onsubmit="handleLogin(event)" class="space-y-5">
+                <div>
+                    <label class="text-sm font-semibold text-gray-700 block mb-1">Email atau No. Telepon</label>
+                    <input type="text" placeholder="nama@perusahaan.com" class="w-full px-4 py-3 bg-[#f8fafc] border border-gray-200 rounded-xl outline-none focus:border-blue-500 font-medium transition-all">
+                </div>
+
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <label class="text-sm font-semibold text-gray-700">Password</label>
+                        <a href="#" class="text-xs font-bold text-blue-600 hover:underline">Lupa password?</a>
+                    </div>
+                    <input type="password" placeholder="Masukkan password Anda" class="w-full px-4 py-3 bg-[#f8fafc] border border-gray-200 rounded-xl outline-none focus:border-blue-500 font-medium transition-all">
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="remember" class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    <label for="remember" class="text-sm font-medium text-gray-600 cursor-pointer">Ingat saya</label>
+                </div>
+
+                <button type="submit" class="w-full bg-black text-white font-bold py-4 rounded-xl hover:bg-gray-800 transition-all uppercase tracking-widest shadow-lg active:scale-[0.98]">
+                    MASUK
+                </button>
+            </form>
+
+            <div class="relative my-8 text-center">
+                <hr class="border-gray-100">
+                <span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Atau</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <button class="flex items-center justify-center gap-2 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5">
+                    <span class="text-xs font-bold uppercase tracking-tighter">Google</span>
+                </button>
+                <button class="flex items-center justify-center gap-2 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" class="w-5">
+                    <span class="text-xs font-bold uppercase tracking-tighter">Microsoft</span>
+                </button>
+            </div>
+
+            <p class="text-center mt-10 text-[10px] font-bold text-gray-300 uppercase tracking-widest">
+                DEV 3.0.1 HOME 1.6.2
+            </p>
+        </div>
+    </section>
+
+    <section id="dashboard-page" class="hidden min-h-screen flex flex-col">
+        <header class="bg-white border-b sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+                <div class="header-brand-container">
+                    <img src="PICOLITE LOGO HAKI copy.png" alt="Logo" class="w-full h-auto">
+                    <div class="header-title-row">
+                        <span>S</span><span>E</span><span>R</span><span>V</span><span>I</span><span>C</span><span>E</span>
+                        <span>M</span><span>A</span><span>N</span><span>A</span><span>G</span><span>E</span><span>M</span><span>E</span><span>N</span><span>T</span>
+                    </div>
+                    <div class="header-title-row sub">
+                        <span>D</span><span>A</span><span>S</span><span>H</span><span>B</span><span>O</span><span>A</span><span>R</span><span>D</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="text-right">
+                        <p class="text-sm font-black uppercase leading-none">BUDI SANTOSO</p>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase mt-1">Teknisi Admin</p>
+                        <button onclick="handleLogout()" class="text-[9px] font-black text-red-500 hover:text-red-700 uppercase tracking-tighter cursor-pointer block ml-auto mt-1">
+                            <i class="fa-solid fa-power-off mr-1"></i> KELUAR SISTEM
+                        </button>
+                    </div>
+                    <div class="relative group">
+                        <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=1e40af&color=fff" class="w-11 h-11 rounded-full border-2 border-white shadow-md cursor-pointer hover:border-blue-500 transition-all" onclick="handleLogout()">
+                    </div>
+                </div>
+            </div>
+
+            <nav class="bg-white border-t flex justify-center">
+                <div class="flex max-w-7xl">
+                    <button class="px-8 py-4 text-sm font-black active-tab">HOME</button>
+                    <button class="px-8 py-4 text-sm font-black text-gray-400 hover:text-blue-800 transition-colors">CUSTOMER DB</button>
+                    <button class="px-8 py-4 text-sm font-black text-gray-400 hover:text-blue-800 transition-colors">INSTALLATION</button>
+                    <button class="px-8 py-4 text-sm font-black text-gray-400 hover:text-blue-800 transition-colors">PARTS & LOAN</button>
+                    <button class="px-8 py-4 text-sm font-black text-gray-400 hover:text-blue-800 transition-colors">WORKFLOW</button>
+                </div>
+            </nav>
+        </header>
+
+        <div class="flex-1 flex overflow-hidden">
+            <aside class="w-64 bg-white border-r flex flex-col p-4 space-y-2 shrink-0">
+                <p class="text-[10px] font-black text-gray-400 uppercase px-4 mb-2 tracking-widest">Home Menu</p>
+                <button onclick="switchHomeSection('service-dashboard')" id="side-service" class="sidebar-active w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black transition-all">
+                    <i class="fa-solid fa-gauge-high"></i> SERVICE DASHBOARD
+                </button>
+                <button onclick="switchHomeSection('milestone')" id="side-milestone" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
+                    <i class="fa-solid fa-map-location-dot"></i> MILESTONE
+                </button>
+                <button onclick="switchHomeSection('activity-logs')" id="side-logs" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
+                    <i class="fa-solid fa-clock-rotate-left"></i> ACTIVITY LOGS
+                </button>
+            </aside>
+
+            <main class="flex-1 p-8 overflow-y-auto bg-[#f8fafc]">
+                
+                <div id="home-service-dashboard" class="space-y-10">
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                        <div class="bg-white p-5 rounded-2xl border border-t-4 border-t-sky-400 shadow-sm stat-card">
+                            <p class="text-[10px] font-black text-gray-400 uppercase mb-1">Request</p>
+                            <p class="text-3xl font-black text-sky-600">12</p>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl border border-t-4 border-t-indigo-400 shadow-sm stat-card">
+                            <p class="text-[10px] font-black text-gray-400 uppercase mb-1">Assigned</p>
+                            <p class="text-3xl font-black text-indigo-600">8</p>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl border border-t-4 border-t-yellow-400 shadow-sm stat-card">
+                            <p class="text-[10px] font-black text-gray-400 uppercase mb-1">WIP</p>
+                            <p class="text-3xl font-black text-yellow-600">15</p>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl border border-t-4 border-t-green-500 shadow-sm stat-card">
+                            <p class="text-[10px] font-black text-gray-400 uppercase mb-1">Solved</p>
+                            <p class="text-3xl font-black text-green-600">42</p>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl border border-t-4 border-t-red-500 shadow-sm stat-card">
+                            <p class="text-[10px] font-black text-gray-400 uppercase mb-1">Unsolved</p>
+                            <p class="text-3xl font-black text-red-600">3</p>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl border border-t-4 border-t-gray-400 shadow-sm stat-card">
+                            <p class="text-[10px] font-black text-gray-400 uppercase mb-1">Cancelled</p>
+                            <p class="text-3xl font-black text-gray-500">5</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white p-8 rounded-3xl border border-b-8 border-b-orange-400 shadow-md flex items-center justify-between transition-all hover:shadow-xl group">
+                            <div>
+                                <p class="text-xs font-black text-gray-400 uppercase mb-2">Parts Borrowed</p>
+                                <p class="text-5xl font-black text-orange-600">24</p>
+                                <p class="text-[10px] font-bold text-orange-400 mt-2 italic tracking-tighter">*Waiting for Return Process</p>
+                            </div>
+                            <div class="bg-orange-50 p-5 rounded-2xl group-hover:bg-orange-100 transition-colors">
+                                <i class="fa-solid fa-boxes-packing text-4xl text-orange-400"></i>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-8 rounded-3xl border border-b-8 border-b-blue-400 shadow-md flex items-center justify-between transition-all hover:shadow-xl group">
+                            <div>
+                                <p class="text-xs font-black text-gray-400 uppercase mb-2">Parts Returned</p>
+                                <p class="text-5xl font-black text-blue-600">18</p>
+                                <p class="text-[10px] font-bold text-blue-400 mt-2 italic tracking-tighter">*Verified by Warehouse</p>
+                            </div>
+                            <div class="bg-blue-50 p-5 rounded-2xl group-hover:bg-blue-100 transition-colors">
+                                <i class="fa-solid fa-rotate-left text-4xl text-blue-400"></i>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-8 rounded-3xl border border-b-8 border-b-purple-400 shadow-md flex items-center justify-between transition-all hover:shadow-xl group">
+                            <div>
+                                <p class="text-xs font-black text-gray-400 uppercase mb-2">Parts Used</p>
+                                <p class="text-5xl font-black text-purple-600">56</p>
+                                <p class="text-[10px] font-bold text-purple-400 mt-2 italic tracking-tighter">*Total Components Applied</p>
+                            </div>
+                            <div class="bg-purple-50 p-5 rounded-2xl group-hover:bg-purple-100 transition-colors">
+                                <i class="fa-solid fa-hand-holding-medical text-4xl text-purple-400"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-3xl border shadow-sm">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                            <h3 class="font-black text-gray-400 uppercase text-xs tracking-widest flex items-center gap-2">
+                                <i class="fa-solid fa-chart-line text-blue-600"></i> Service Performance Trend
+                            </h3>
+                            
+                            <div class="flex flex-wrap gap-2">
+                                <select id="year-filter" onchange="updateChart()" class="bg-gray-100 border-none rounded-full px-4 py-1 text-[10px] font-bold outline-none cursor-pointer">
+                                    <option value="2026">2026</option>
+                                    <option value="2025">2025</option>
+                                </select>
+                                <select id="month-filter" onchange="updateChart()" class="bg-gray-100 border-none rounded-full px-4 py-1 text-[10px] font-bold outline-none cursor-pointer hidden">
+                                    <option value="0">Januari</option><option value="1">Februari</option><option value="2">Maret</option>
+                                    <option value="3">April</option><option value="4">Mei</option><option value="5">Juni</option>
+                                </select>
+                                <div class="flex gap-1 bg-gray-100 p-1 rounded-full">
+                                    <button id="btn-1y" onclick="changeChartMode('1y')" class="px-4 py-1 bg-blue-600 text-white rounded-full text-[10px] font-bold transition-all">Yearly</button>
+                                    <button id="btn-1m" onclick="changeChartMode('1m')" class="px-4 py-1 text-gray-400 rounded-full text-[10px] font-bold transition-all">Monthly</button>
+                                    <button id="btn-1w" onclick="changeChartMode('1w')" class="px-4 py-1 text-gray-400 rounded-full text-[10px] font-bold transition-all">Weekly</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative h-[350px]">
+                            <canvas id="serviceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="home-milestone" class="hidden space-y-8">
+                    <div class="flex flex-col gap-2">
+                        <h2 class="text-xl font-black text-[#1e3a8a] uppercase tracking-tighter italic">Milestone installation map</h2>
+                        <div class="h-1 w-20 bg-blue-600 rounded-full"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white p-6 rounded-3xl border border-b-4 border-b-blue-600 shadow-sm hover:shadow-md transition-all">
+                            <p class="text-[11px] font-black text-blue-600 uppercase mb-1 tracking-widest">Region WIB</p>
+                            <p class="text-[10px] font-bold text-gray-400 leading-tight mb-4">Sumatra, Jawa, Kal-Bar, Kal-Teng</p>
+                            <div class="flex items-end justify-between">
+                                <div>
+                                    <p class="text-4xl font-black text-gray-800">142</p>
+                                    <p class="text-[10px] font-black text-gray-400 uppercase">Mesin Terinstal</p>
+                                </div>
+                                <div class="bg-blue-50 p-3 rounded-2xl">
+                                    <i class="fa-solid fa-microchip text-2xl text-blue-600"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-3xl border border-b-4 border-b-orange-500 shadow-sm hover:shadow-md transition-all">
+                            <p class="text-[11px] font-black text-orange-600 uppercase mb-1 tracking-widest">Region WITA</p>
+                            <p class="text-[10px] font-bold text-gray-400 leading-tight mb-4">Sulawesi, Nusa Tenggara, Kal-Sel, Tim, Utara</p>
+                            <div class="flex items-end justify-between">
+                                <div>
+                                    <p class="text-4xl font-black text-gray-800">86</p>
+                                    <p class="text-[10px] font-black text-gray-400 uppercase">Mesin Terinstal</p>
+                                </div>
+                                <div class="bg-orange-50 p-3 rounded-2xl">
+                                    <i class="fa-solid fa-microchip text-2xl text-orange-600"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-3xl border border-b-4 border-b-red-600 shadow-sm hover:shadow-md transition-all">
+                            <p class="text-[11px] font-black text-red-600 uppercase mb-1 tracking-widest">Region WIT</p>
+                            <p class="text-[10px] font-bold text-gray-400 leading-tight mb-4">Kepulauan Maluku dan Papua</p>
+                            <div class="flex items-end justify-between">
+                                <div>
+                                    <p class="text-4xl font-black text-gray-800">34</p>
+                                    <p class="text-[10px] font-black text-gray-400 uppercase">Mesin Terinstal</p>
+                                </div>
+                                <div class="bg-red-50 p-3 rounded-2xl">
+                                    <i class="fa-solid fa-microchip text-2xl text-red-600"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="map-container">
+                        <div id="map"></div>
+                    </div>
+                </div>
+
+                <div id="home-activity-logs" class="hidden space-y-6">
+                    <div class="flex flex-col gap-2">
+                        <h2 class="text-xl font-black text-[#1e3a8a] uppercase tracking-tighter italic">System activity logs</h2>
+                        <div class="h-1 w-20 bg-blue-600 rounded-full"></div>
+                    </div>
+
+                    <div class="bg-white rounded-[2.5rem] border shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-gray-50 border-b">
+                                        <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Timestamp</th>
+                                        <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">User Account</th>
+                                        <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Action / Activity</th>
+                                        <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-8 py-4 text-xs font-bold text-gray-400 italic">12/03/2026 03:15</td>
+                                        <td class="px-8 py-4">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-7 h-7 bg-blue-100 rounded-full flex items-center justify-center text-[10px] font-black text-blue-600">BS</div>
+                                                <span class="text-xs font-black uppercase">Budi Santoso</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-8 py-4 text-xs font-bold text-gray-700 uppercase tracking-tighter">Updated "Service Performance" Filter to Monthly View</td>
+                                        <td class="px-8 py-4 text-right">
+                                            <span class="px-3 py-1 bg-green-50 text-green-600 text-[9px] font-black rounded-full uppercase italic border border-green-100">Success</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-8 py-4 text-xs font-bold text-gray-400 italic">12/03/2026 03:02</td>
+                                        <td class="px-8 py-4">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-7 h-7 bg-indigo-100 rounded-full flex items-center justify-center text-[10px] font-black text-indigo-600">SY</div>
+                                                <span class="text-xs font-black uppercase">System Admin</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-8 py-4 text-xs font-bold text-gray-700 uppercase tracking-tighter">Generated New Installation Milestone Map</td>
+                                        <td class="px-8 py-4 text-right">
+                                            <span class="px-3 py-1 bg-blue-50 text-blue-600 text-[9px] font-black rounded-full uppercase italic border border-blue-100">Active</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-8 py-4 text-xs font-bold text-gray-400 italic">12/03/2026 02:50</td>
+                                        <td class="px-8 py-4">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-7 h-7 bg-blue-100 rounded-full flex items-center justify-center text-[10px] font-black text-blue-600">BS</div>
+                                                <span class="text-xs font-black uppercase">Budi Santoso</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-8 py-4 text-xs font-bold text-gray-700 uppercase tracking-tighter">Login System via Chrome Dashboard</td>
+                                        <td class="px-8 py-4 text-right">
+                                            <span class="px-3 py-1 bg-green-50 text-green-600 text-[9px] font-black rounded-full uppercase italic border border-green-100">Success</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <p class="text-center text-gray-300 text-[9px] font-bold uppercase tracking-[0.2em] pt-4">*** end of recent activity logs ***</p>
+                </div>
+
+            </main>
+        </div>
+    </section>
+
+    <script>
+        let chartInstance = null;
+        let mapInstance = null;
+        let currentMode = '1y';
+
+        // Login/Logout
+        function handleLogin(e) {
+            e.preventDefault();
+            document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('dashboard-page').classList.remove('hidden');
+            setTimeout(updateChart, 300);
+        }
+
+        function handleLogout() {
+            if (confirm("Apakah Anda yakin ingin logout?")) {
+                document.getElementById('dashboard-page').classList.add('hidden');
+                document.getElementById('login-page').classList.remove('hidden');
+            }
+        }
+
+        // CHART LOGIC
+        function changeChartMode(mode) {
+            currentMode = mode;
+            const buttons = ['1y', '1m', '1w'];
+            buttons.forEach(b => {
+                const el = document.getElementById('btn-' + b);
+                el.classList.remove('bg-blue-600', 'text-white');
+                el.classList.add('text-gray-400');
+            });
+            document.getElementById('btn-' + mode).classList.add('bg-blue-600', 'text-white');
+            document.getElementById('btn-' + mode).classList.remove('text-gray-400');
+            
+            document.getElementById('month-filter').classList.toggle('hidden', mode === '1y');
+            updateChart();
+        }
+
+        function updateChart() {
+            const ctx = document.getElementById('serviceChart').getContext('2d');
+            let labels, data;
+
+            if (currentMode === '1y') {
+                labels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                data = [65, 78, 72, 95, 88, 110, 80, 95, 120, 100, 115, 130];
+            } else if (currentMode === '1m') {
+                labels = Array.from({length: 30}, (_, i) => i + 1);
+                data = Array.from({length: 30}, () => Math.floor(Math.random() * 50) + 20);
+            } else {
+                labels = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+                data = [12, 19, 15, 8, 22, 30, 10];
+            }
+
+            if (chartInstance) chartInstance.destroy();
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        borderColor: '#1e40af',
+                        backgroundColor: 'rgba(30, 64, 175, 0.05)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 4,
+                        pointRadius: currentMode === '1m' ? 2 : 5,
+                        pointBackgroundColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { weight: 'bold', size: 10 } } },
+                        x: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        // MAP LOGIC
+        function initMap() {
+            if (mapInstance) return;
+            const bounds = L.latLngBounds(L.latLng(-11.0, 90.0), L.latLng(8.0, 141.0));
+            mapInstance = L.map('map', { center: [-2.5489, 118.0149], zoom: 5, minZoom: 5, maxBounds: bounds, maxBoundsViscosity: 1.0 });
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapInstance);
+        }
+
+        // Navigation Switcher
+        function switchHomeSection(section) {
+            const sections = ['service-dashboard', 'milestone', 'activity-logs'];
+            sections.forEach(id => document.getElementById('home-' + id).classList.add('hidden'));
+            document.getElementById('home-' + section).classList.remove('hidden');
+
+            const btnIds = { 'service-dashboard': 'side-service', 'milestone': 'side-milestone', 'activity-logs': 'side-logs' };
+            Object.values(btnIds).forEach(id => {
+                document.getElementById(id).classList.remove('sidebar-active');
+                document.getElementById(id).classList.add('text-gray-400');
+            });
+            document.getElementById(btnIds[section]).classList.add('sidebar-active');
+
+            if (section === 'service-dashboard') setTimeout(updateChart, 50);
+            if (section === 'milestone') setTimeout(initMap, 100);
+        }
+    </script>
+</body>
+</html>
