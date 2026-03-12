@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Picolite Service Management Dev-12/03 V0.1.3</title>
+    <title>v0.2.0-beta-20260312</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -66,6 +66,7 @@
             background-color: #f1f5f9; 
             color: #1e40af; 
             border-right: 4px solid #1e40af; 
+            font-weight: 800;
         }
 
         .map-container { 
@@ -87,62 +88,19 @@
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        @media (max-width: 768px) {
+            #sidebar {
+                position: fixed; left: -100%; top: 0; bottom: 0; width: 280px;
+                z-index: 999; transition: 0.3s; background: white;
+                box-shadow: 10px 0 15px rgba(0,0,0,0.1);
+            }
+            #sidebar.active { left: 0; }
+            .main-content { margin-left: 0 !important; width: 100% !important; }
+        }
     </style>
-    <style>
-    /* Perbaikan untuk Mobile */
-    @media (max-width: 768px) {
-        /* 1. Sembunyikan Sidebar asli di HP */
-        #sidebar {
-            position: fixed;
-            left: -100%; /* Sembunyi di kiri */
-            top: 0;
-            bottom: 0;
-            width: 280px;
-            z-index: 999;
-            transition: 0.3s ease-all;
-            background: white;
-            box-shadow: 10px 0 15px rgba(0,0,0,0.1);
-        }
-
-        /* 2. Class untuk memunculkan sidebar */
-        #sidebar.active {
-            left: 0;
-        }
-
-        /* 3. Buat konten utama jadi full screen di HP */
-        .main-content {
-            margin-left: 0 !important;
-            padding: 15px !important;
-            width: 100% !important;
-        }
-
-        /* 4. Agar tabel bisa di-swipe kanan kiri (tidak pecah) */
-        .table-responsive {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        /* 5. Header HP agar ada tombol menunya */
-        .mobile-header {
-            display: flex !important;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px;
-            background: white;
-            border-bottom: 1px solid #eee;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-    }
-
-    /* Sembunyikan Header Mobile di Laptop */
-    .mobile-header { display: none; }
-</style>
 </head>
-
-<body class="text-gray-900 overflow-x-hidden">
-
+<!-- Part 2 (Bagian Login & Awal Dashboard) --> <body class="text-gray-900 overflow-x-hidden">
     <section id="login-page" class="min-h-screen flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-[480px] p-12 login-card">
             <div class="text-center mb-8">
@@ -153,49 +111,37 @@
             </div>
 
             <form onsubmit="handleLogin(event)" class="space-y-6">
-    <div>
-        <label class="text-sm font-bold text-gray-700 block mb-2 uppercase tracking-wide">Email atau No. Telepon</label>
-        <div class="relative">
-            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                <i class="fas fa-user"></i>
-            </span>
-            <input type="text" id="email-input" 
-                class="w-full pl-10 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 font-semibold transition-all shadow-sm" 
-                placeholder="Email atau No. Telepon Anda">
-        </div>
-    </div>
+                <div>
+                    <label class="text-sm font-bold text-gray-700 block mb-2 uppercase tracking-wide">Email atau No. Telepon</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                            <i class="fas fa-user"></i>
+                        </span>
+                        <input type="text" id="email-input" class="w-full pl-10 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 font-semibold transition-all shadow-sm" placeholder="Email atau No. Telepon">
+                    </div>
+                </div>
 
-    <div>
-        <div class="flex justify-between mb-2">
-            <label class="text-sm font-bold text-gray-700 uppercase tracking-wide">Password</label>
-            <a href="#" class="text-xs font-black text-blue-600 hover:text-blue-800 transition-colors">LUPA PASSWORD?</a>
-        </div>
-        <div class="relative">
-    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-        <i class="fas fa-lock"></i>
-    </span>
-    
-    <input type="password" id="pass-input" 
-        class="w-full pl-10 pr-12 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 font-semibold transition-all shadow-sm" 
-        placeholder="Masukkan password Anda">
-    
-    <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-blue-600 transition-colors">
-        <i id="eye-icon" class="fas fa-eye"></i>
-    </button>
-</div>
-    </div>
+                <div>
+                    <div class="flex justify-between mb-2">
+                        <label class="text-sm font-bold text-gray-700 uppercase tracking-wide">Password</label>
+                        <a href="#" class="text-xs font-black text-blue-600 hover:text-blue-800 transition-colors">LUPA PASSWORD?</a>
+                    </div>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                        <input type="password" id="pass-input" class="w-full pl-10 pr-12 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 font-semibold transition-all shadow-sm" placeholder="Masukkan password">
+                        <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-blue-600 transition-colors">
+                            <i id="eye-icon" class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
 
-    <div class="flex items-center gap-3 py-2">
-        <input type="checkbox" id="remember" class="w-5 h-5 rounded-lg border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer">
-        <label for="remember" class="text-sm font-bold text-gray-500 cursor-pointer select-none">INGAT SAYA</label>
-    </div>
-
-    <button type="submit" 
-        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-5 rounded-2xl transition-all uppercase tracking-[0.2em] shadow-xl shadow-blue-200 active:scale-[0.97] flex justify-center items-center gap-3">
-        <span>LOG IN</span>
-        <i class="fas fa-arrow-right text-sm"></i>
-    </button>
-</form>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-5 rounded-2xl transition-all uppercase tracking-[0.2em] shadow-xl shadow-blue-200 active:scale-[0.97] flex justify-center items-center gap-3">
+                    <span>LOG IN</span>
+                    <i class="fas fa-arrow-right text-sm"></i>
+                </button>
+            </form>
 
             <div class="relative my-8 text-center">
                 <hr class="border-gray-100">
@@ -212,10 +158,7 @@
                     <span class="text-xs font-bold uppercase tracking-tighter">Microsoft</span>
                 </button>
             </div>
-
-            <p class="text-center mt-10 text-[10px] font-bold text-gray-300 uppercase tracking-widest">
-                DEV 3.0.1 HOME 1.6.2
-            </p>
+            <p class="text-center mt-10 text-[10px] font-bold text-gray-400 uppercase tracking-widest">v0.2.0-beta-20260312</p>
         </div>
     </section>
 
@@ -232,8 +175,7 @@
                         <span>D</span><span>A</span><span>S</span><span>H</span><span>B</span><span>O</span><span>A</span><span>R</span><span>D</span>
                     </div>
                 </div>
-
-                <div class="flex items-center gap-4">
+                <!-- Part 3: Navigasi tab dan sidebar menu --> <div class="flex items-center gap-4">
                     <div class="text-right">
                         <p class="text-sm font-black uppercase leading-none">BUDI SANTOSO</p>
                         <p class="text-[10px] font-bold text-gray-400 uppercase mt-1">Teknisi Admin</p>
@@ -242,7 +184,7 @@
                         </button>
                     </div>
                     <div class="relative group">
-                        <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=1e40af&color=fff" class="w-11 h-11 rounded-full border-2 border-white shadow-md cursor-pointer hover:border-blue-500 transition-all" onclick="handleLogout()">
+                        <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=1e40af&color=fff" class="w-11 h-11 rounded-full border-2 border-white shadow-md cursor-pointer hover:border-blue-500 transition-all">
                     </div>
                 </div>
             </div>
@@ -251,7 +193,6 @@
                 <div class="flex max-w-7xl">
                     <button id="nav-home" onclick="switchMainTab('HOME')" class="px-8 py-4 text-sm font-black active-tab">HOME</button>
                     <button id="nav-db" onclick="switchMainTab('DATABASE')" class="px-8 py-4 text-sm font-black text-gray-400 hover:text-blue-800 transition-colors uppercase">DATABASE</button>
-
                     <button class="px-8 py-4 text-sm font-black text-gray-400 hover:text-blue-800 transition-colors">PARTS & LOAN</button>
                     <button class="px-8 py-4 text-sm font-black text-gray-400 hover:text-blue-800 transition-colors">WORKFLOW</button>
                 </div>
@@ -259,52 +200,38 @@
         </header>
 
         <div class="flex-1 flex">
-            <aside class="w-64 bg-white border-r flex flex-col p-4 space-y-2 shrink-0 sticky top-[138px] h-[calc(100vh-138px)]">
-    <div id="side-menu-home">
-        <p class="text-[10px] font-black text-gray-400 uppercase px-4 mb-2 tracking-widest">Home Menu</p>
-        
-        <button onclick="switchHomeSection('service-dashboard')" id="side-service" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
-            <i class="fa-solid fa-gauge-high"></i> SERVICE DASHBOARD
-        </button>
+            <aside id="sidebar" class="w-64 bg-white border-r flex flex-col p-4 space-y-2 shrink-0 sticky top-[138px] h-[calc(100vh-138px)]">
+                <div id="side-menu-home">
+                    <p class="text-[10px] font-black text-gray-400 uppercase px-4 mb-2 tracking-widest">Home Menu</p>
+                    <button onclick="switchHomeSection('service-dashboard')" id="side-service" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
+                        <i class="fa-solid fa-gauge-high"></i> SERVICE DASHBOARD
+                    </button>
+                    <button onclick="switchHomeSection('parts-tracking')" id="side-parts" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
+                        <i class="fa-solid fa-boxes-stacked"></i> SPAREPARTS TRACKING
+                    </button>
+                    <button onclick="switchHomeSection('milestone')" id="side-milestone" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
+                        <i class="fa-solid fa-map-location-dot"></i> MILESTONE
+                    </button>
+                    <button onclick="switchHomeSection('activity-logs')" id="side-logs" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
+                        <i class="fa-solid fa-clock-rotate-left"></i> ACTIVITY LOGS
+                    </button>
+                </div>
 
-        <button onclick="switchHomeSection('parts-tracking')" id="side-parts" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
-            <i class="fa-solid fa-gauge-high"></i> SPAREPARTS TRACKING
-        </button>
-
-        <button onclick="switchHomeSection('milestone')" id="side-milestone" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
-            <i class="fa-solid fa-map-location-dot"></i> MILESTONE
-        </button>
-
-        <button onclick="switchHomeSection('activity-logs')" id="side-logs" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
-            <i class="fa-solid fa-clock-rotate-left"></i> ACTIVITY LOGS
-        </button>
-    </div>
-
-    <div id="side-menu-database" class="hidden">
-        <p class="text-[10px] font-black text-gray-400 uppercase px-4 mb-2 tracking-widest">Database Menu</p>
-        
-        <button onclick="switchDbSection('customer-list')" id="side-customer" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
-            <i class="fa-solid fa-hospital"></i> CUSTOMER DATA
-        </button>
-
-        <button onclick="switchDbSection('installation-db')" id="side-installation-db" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
-            <i class="fa-solid fa-database"></i> INSTALLATION DATABASE
-        </button>
-    </div>
-</aside>
-
-            <main class="flex-1 p-8 bg-[#f8fafc]">
-                
-
-<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-    
-</div>
+                <div id="side-menu-database" class="hidden">
+                    <p class="text-[10px] font-black text-gray-400 uppercase px-4 mb-2 tracking-widest">Database Menu</p>
+                    <button onclick="switchDbSection('customer-list')" id="side-customer" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
+                        <i class="fa-solid fa-hospital"></i> CUSTOMER DATA
+                    </button>
+                    <button onclick="switchDbSection('installation-db')" id="side-installation-db" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
+                        <i class="fa-solid fa-database"></i> INSTALLATION DATABASE
+                    </button>
+                </div>
+            </aside>
+            <!-- Part 4: Konten Utama :status card & area chart. -->  <main class="flex-1 p-8 bg-[#f8fafc]">
                 <div id="home-service-dashboard" class="space-y-4">
                     <h3 class="font-black text-gray-700 uppercase text-sm tracking-[0.1em] flex items-center gap-2">
-                     <i class="fa-solid fa-clipboard-list text-blue-600"></i> Service Status Overview
-                     </h3>
-
-
+                        <i class="fa-solid fa-clipboard-list text-blue-600"></i> Service Status Overview
+                    </h3>
 
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                         <div class="bg-white p-5 rounded-2xl border border-t-4 border-t-sky-400 shadow-sm stat-card">
@@ -333,150 +260,116 @@
                         </div>
                     </div>
 
-            <div class="!mt-16 mb-4">
-    <h1 class="font-black text-gray-700 uppercase text-sm tracking-widest flex items-center gap-2 leading-none">
-        <i class="fa-solid fa-boxes-stacked text-orange-500"></i> Sparepart Tracking Status
-    </h1>
-</div>
-
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-                        <div class="bg-white p-8 rounded-3xl border border-b-8 border-b-orange-400 shadow-md flex items-center justify-between transition-all hover:shadow-xl group">
-                            <div>
-                                <p class="text-xs font-black text-gray-400 uppercase mb-2">Parts Borrowed</p>
-                                <p class="text-5xl font-black text-orange-600">24</p>
-                                <p class="text-[10px] font-bold text-orange-400 mt-2 italic tracking-tighter">*Waiting for Return Process</p>
-                            </div>
-                            <div class="bg-orange-50 p-5 rounded-2xl group-hover:bg-orange-100 transition-colors">
-                                <i class="fa-solid fa-boxes-packing text-4xl text-orange-400"></i>
-                            </div>
-                        </div>
-
-                        <div class="bg-white p-8 rounded-3xl border border-b-8 border-b-blue-400 shadow-md flex items-center justify-between transition-all hover:shadow-xl group">
-                            <div>
-                                <p class="text-xs font-black text-gray-400 uppercase mb-2">Parts Returned</p>
-                                <p class="text-5xl font-black text-blue-600">18</p>
-                                <p class="text-[10px] font-bold text-blue-400 mt-2 italic tracking-tighter">*Verified by Warehouse</p>
-                            </div>
-                            <div class="bg-blue-50 p-5 rounded-2xl group-hover:bg-blue-100 transition-colors">
-                                <i class="fa-solid fa-rotate-left text-4xl text-blue-400"></i>
-                            </div>
-                        </div>
-
-                        <div class="bg-white p-8 rounded-3xl border border-b-8 border-b-purple-400 shadow-md flex items-center justify-between transition-all hover:shadow-xl group">
-                            <div>
-                                <p class="text-xs font-black text-gray-400 uppercase mb-2">Parts Used</p>
-                                <p class="text-5xl font-black text-purple-600">56</p>
-                                <p class="text-[10px] font-bold text-purple-400 mt-2 italic tracking-tighter">*Total Components Applied</p>
-                            </div>
-                            <div class="bg-purple-50 p-5 rounded-2xl group-hover:bg-purple-100 transition-colors">
-                                <i class="fa-solid fa-hand-holding-medical text-4xl text-purple-400"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-8 rounded-3xl border shadow-sm">
+                    <div class="bg-white p-8 rounded-3xl border shadow-sm !mt-10">
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-                            <h3 class="font-black text-gray-400 uppercase text-xs tracking-widest flex items-center gap-2">
+                            <h3 class="font-black text-gray-400 uppercase text-[10px] tracking-widest flex items-center gap-2">
                                 <i class="fa-solid fa-chart-line text-blue-600"></i> Service Performance Trend
+                                <span id="chart-period-label" class="text-[10px] text-gray-400 font-normal lowercase tracking-normal ml-2"></span>
                             </h3>
-                            <div class="flex flex-wrap gap-2">
-                                <select id="year-filter" onchange="updateChart()" class="bg-gray-100 border-none rounded-full px-4 py-1 text-[10px] font-bold outline-none cursor-pointer">
-                                    <option value="2026">2026</option>
-                                    <option value="2025">2025</option>
-                                    <option value="2024">2024</option>
-                                </select>
-                                <div id="month-filter-container" class="hidden">
-                                     <select id="month-filter" onchange="updateChart()" class="bg-gray-100 border-none rounded-full px-4 py-1 text-[10px] font-bold outline-none cursor-pointer">
-                                        <option value="0">Januari</option>
-                                        <option value="1">Februari</option>
-                                        <option value="2">Maret</option>
-                                        <option value="3">April</option>
-                                        <option value="4">Mei</option>
-                                        <option value="5">Juni</option>
-                                        <option value="6">Juli</option>
-                                        <option value="7">Agustus</option>
-                                        <option value="8">September</option>
-                                        <option value="9">Oktober</option>
-                                        <option value="10">November</option>
-                                        <option value="11">Desember</option>
+
+                            <div class="flex flex-wrap items-center justify-end gap-3 ml-auto">
+                                <div id="date-picker-container" class="hidden">
+                                    <input type="date" id="start-date-filter" onchange="updateChart()" 
+                                           class="bg-gray-100 border-none rounded-full px-4 py-1.5 text-[10px] font-bold outline-none cursor-pointer hover:bg-gray-200 transition-all">
+                                </div>
+
+                                <div id="year-month-group" class="flex gap-2">
+                                    <select id="year-filter" onchange="updateChart()" class="bg-gray-100 border-none rounded-full px-4 py-1.5 text-[10px] font-bold outline-none cursor-pointer">
+                                        <option value="2026">2026</option>
+                                        <option value="2025">2025</option>
                                     </select>
-        
-                                         </div>
-                                <div class="flex gap-1 bg-gray-100 p-1 rounded-full">
-                                    <button id="btn-1y" onclick="changeChartMode('1y')" class="px-4 py-1 bg-blue-600 text-white rounded-full text-[10px] font-bold transition-all">Yearly</button>
-                                    <button id="btn-1m" onclick="changeChartMode('1m')" class="px-4 py-1 text-gray-400 rounded-full text-[10px] font-bold transition-all">Monthly</button>
-                                    <button id="btn-1w" onclick="changeChartMode('1w')" class="px-4 py-1 text-gray-400 rounded-full text-[10px] font-bold transition-all">Weekly</button>
+                                    <div id="month-filter-container" class="hidden">
+                                        <select id="month-filter" onchange="updateChart()" class="bg-gray-100 border-none rounded-full px-4 py-1.5 text-[10px] font-bold outline-none cursor-pointer">
+                                            <option value="0">Januari</option>
+                                            <option value="1">Februari</option>
+                                            <option value="2" selected>Maret</option>
+                                            <option value="3">April</option><option value="4">Mei</option><option value="5">Juni</option>
+                                            <option value="6">Juli</option><option value="7">Agustus</option><option value="8">September</option>
+                                            <option value="9">Oktober</option><option value="10">November</option><option value="11">Desember</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="flex gap-1 bg-gray-100 p-1 rounded-full border border-gray-200">
+                                    <button id="btn-1y" onclick="changeChartMode('1y')" class="px-4 py-1 bg-blue-600 text-white rounded-full text-[10px] font-bold transition-all shadow-sm">Yearly</button>
+                                    <button id="btn-1m" onclick="changeChartMode('1m')" class="px-4 py-1 text-gray-400 rounded-full text-[10px] font-bold transition-all hover:text-blue-600">Monthly</button>
+                                    <button id="btn-1w" onclick="changeChartMode('1w')" class="px-4 py-1 text-gray-400 rounded-full text-[10px] font-bold transition-all hover:text-blue-600">Weekly</button>
                                 </div>
                             </div>
                         </div>
+
                         <div class="relative h-[350px]">
                             <canvas id="serviceChart"></canvas>
                         </div>
                     </div>
                 </div>
-                
+                <!-- Part 5: Tracking Spareparts & Milestone map --> <div id="home-parts-tracking" class="hidden space-y-4">
+                    <h3 class="font-black text-gray-700 uppercase text-sm tracking-widest flex items-center gap-2">
+                        <i class="fa-solid fa-boxes-stacked text-orange-500"></i> Sparepart Tracking Status
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white p-8 rounded-3xl border border-b-8 border-b-orange-400 shadow-md flex items-center justify-between group">
+                            <div>
+                                <p class="text-xs font-black text-gray-400 uppercase mb-2">Parts Borrowed</p>
+                                <p class="text-5xl font-black text-orange-600">24</p>
+                                <p class="text-[10px] font-bold text-orange-400 mt-2 italic">*Waiting for Return</p>
+                            </div>
+                            <div class="bg-orange-50 p-5 rounded-2xl"><i class="fa-solid fa-boxes-packing text-4xl text-orange-400"></i></div>
+                        </div>
+                        <div class="bg-white p-8 rounded-3xl border border-b-8 border-b-blue-400 shadow-md flex items-center justify-between group">
+                            <div>
+                                <p class="text-xs font-black text-gray-400 uppercase mb-2">Parts Returned</p>
+                                <p class="text-5xl font-black text-blue-600">18</p>
+                                <p class="text-[10px] font-bold text-blue-400 mt-2 italic">*Verified</p>
+                            </div>
+                            <div class="bg-blue-50 p-5 rounded-2xl"><i class="fa-solid fa-rotate-left text-4xl text-blue-400"></i></div>
+                        </div>
+                        <div class="bg-white p-8 rounded-3xl border border-b-8 border-b-purple-400 shadow-md flex items-center justify-between group">
+                            <div>
+                                <p class="text-xs font-black text-gray-400 uppercase mb-2">Parts Used</p>
+                                <p class="text-5xl font-black text-purple-600">56</p>
+                                <p class="text-[10px] font-bold text-purple-400 mt-2 italic">*Applied</p>
+                            </div>
+                            <div class="bg-purple-50 p-5 rounded-2xl"><i class="fa-solid fa-hand-holding-medical text-4xl text-purple-400"></i></div>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="home-milestone" class="hidden space-y-8">
                     <div class="flex flex-col gap-2">
                         <h2 class="text-xl font-black text-[#1e3a8a] uppercase tracking-tighter italic">Milestone installation map</h2>
                         <div class="h-1 w-20 bg-blue-600 rounded-full"></div>
                     </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-white p-6 rounded-3xl border border-b-4 border-b-blue-600 shadow-sm hover:shadow-md transition-all">
+                        <div class="bg-white p-6 rounded-3xl border border-b-4 border-b-blue-600 shadow-sm">
                             <p class="text-[11px] font-black text-blue-600 uppercase mb-1 tracking-widest">Region WIB</p>
-                            <p class="text-[10px] font-bold text-gray-400 leading-tight mb-4">Sumatra, Jawa, Kal-Bar, Kal-Teng</p>
                             <div class="flex items-end justify-between">
-                                <div>
-                                    <p class="text-4xl font-black text-gray-800">142</p>
-                                    <p class="text-[10px] font-black text-gray-400 uppercase">Mesin Terinstal</p>
-                                </div>
-                                <div class="bg-blue-50 p-3 rounded-2xl">
-                                    <i class="fa-solid fa-microchip text-2xl text-blue-600"></i>
-                                </div>
+                                <div><p class="text-4xl font-black text-gray-800">142</p><p class="text-[10px] font-black text-gray-400 uppercase">Mesin Terinstal</p></div>
+                                <div class="bg-blue-50 p-3 rounded-2xl"><i class="fa-solid fa-microchip text-2xl text-blue-600"></i></div>
                             </div>
                         </div>
-
-                        <div class="bg-white p-6 rounded-3xl border border-b-4 border-b-orange-500 shadow-sm hover:shadow-md transition-all">
+                        <div class="bg-white p-6 rounded-3xl border border-b-4 border-b-orange-500 shadow-sm">
                             <p class="text-[11px] font-black text-orange-600 uppercase mb-1 tracking-widest">Region WITA</p>
-                            <p class="text-[10px] font-bold text-gray-400 leading-tight mb-4">Sulawesi, Nusa Tenggara, Kal-Sel, Tim, Utara</p>
                             <div class="flex items-end justify-between">
-                                <div>
-                                    <p class="text-4xl font-black text-gray-800">86</p>
-                                    <p class="text-[10px] font-black text-gray-400 uppercase">Mesin Terinstal</p>
-                                </div>
-                                <div class="bg-orange-50 p-3 rounded-2xl">
-                                    <i class="fa-solid fa-microchip text-2xl text-orange-600"></i>
-                                </div>
+                                <div><p class="text-4xl font-black text-gray-800">86</p><p class="text-[10px] font-black text-gray-400 uppercase">Mesin Terinstal</p></div>
+                                <div class="bg-orange-50 p-3 rounded-2xl"><i class="fa-solid fa-microchip text-2xl text-orange-600"></i></div>
                             </div>
                         </div>
-
-                        <div class="bg-white p-6 rounded-3xl border border-b-4 border-b-red-600 shadow-sm hover:shadow-md transition-all">
+                        <div class="bg-white p-6 rounded-3xl border border-b-4 border-b-red-600 shadow-sm">
                             <p class="text-[11px] font-black text-red-600 uppercase mb-1 tracking-widest">Region WIT</p>
-                            <p class="text-[10px] font-bold text-gray-400 leading-tight mb-4">Kepulauan Maluku dan Papua</p>
                             <div class="flex items-end justify-between">
-                                <div>
-                                    <p class="text-4xl font-black text-gray-800">34</p>
-                                    <p class="text-[10px] font-black text-gray-400 uppercase">Mesin Terinstal</p>
-                                </div>
-                                <div class="bg-red-50 p-3 rounded-2xl">
-                                    <i class="fa-solid fa-microchip text-2xl text-red-600"></i>
-                                </div>
+                                <div><p class="text-4xl font-black text-gray-800">34</p><p class="text-[10px] font-black text-gray-400 uppercase">Mesin Terinstal</p></div>
+                                <div class="bg-red-50 p-3 rounded-2xl"><i class="fa-solid fa-microchip text-2xl text-red-600"></i></div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="map-container">
-                        <div id="map"></div>
-                    </div>
+                    <div class="map-container"><div id="map"></div></div>
                 </div>
-
-                <div id="home-activity-logs" class="hidden space-y-6">
+               <!-- Part 6: Activity Logs & DB Section --> <div id="home-activity-logs" class="hidden space-y-6">
                     <div class="flex flex-col gap-2">
                         <h2 class="text-xl font-black text-[#1e3a8a] uppercase tracking-tighter italic">System activity logs</h2>
                         <div class="h-1 w-20 bg-blue-600 rounded-full"></div>
                     </div>
-
                     <div class="bg-white rounded-[2.5rem] border shadow-sm overflow-hidden">
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse">
@@ -491,42 +384,9 @@
                                 <tbody class="divide-y divide-gray-100">
                                     <tr class="hover:bg-gray-50 transition-colors">
                                         <td class="px-8 py-4 text-xs font-bold text-gray-400 italic">12/03/2026 03:15</td>
-                                        <td class="px-8 py-4">
-                                            <div class="flex items-center gap-3">
-                                                <div class="w-7 h-7 bg-blue-100 rounded-full flex items-center justify-center text-[10px] font-black text-blue-600">BS</div>
-                                                <span class="text-xs font-black uppercase">Budi Santoso</span>
-                                            </div>
-                                        </td>
-                                        <td class="px-8 py-4 text-xs font-bold text-gray-700 uppercase tracking-tighter">Updated "Service Performance" Filter to Monthly View</td>
-                                        <td class="px-8 py-4 text-right">
-                                            <span class="px-3 py-1 bg-green-50 text-green-600 text-[9px] font-black rounded-full uppercase italic border border-green-100">Success</span>
-                                        </td>
-                                    </tr>
-                                    <tr class="hover:bg-gray-50 transition-colors">
-                                        <td class="px-8 py-4 text-xs font-bold text-gray-400 italic">12/03/2026 03:02</td>
-                                        <td class="px-8 py-4">
-                                            <div class="flex items-center gap-3">
-                                                <div class="w-7 h-7 bg-indigo-100 rounded-full flex items-center justify-center text-[10px] font-black text-indigo-600">SY</div>
-                                                <span class="text-xs font-black uppercase">System Admin</span>
-                                            </div>
-                                        </td>
-                                        <td class="px-8 py-4 text-xs font-bold text-gray-700 uppercase tracking-tighter">Generated New Installation Milestone Map</td>
-                                        <td class="px-8 py-4 text-right">
-                                            <span class="px-3 py-1 bg-blue-50 text-blue-600 text-[9px] font-black rounded-full uppercase italic border border-blue-100">Active</span>
-                                        </td>
-                                    </tr>
-                                    <tr class="hover:bg-gray-50 transition-colors">
-                                        <td class="px-8 py-4 text-xs font-bold text-gray-400 italic">12/03/2026 02:50</td>
-                                        <td class="px-8 py-4">
-                                            <div class="flex items-center gap-3">
-                                                <div class="w-7 h-7 bg-blue-100 rounded-full flex items-center justify-center text-[10px] font-black text-blue-600">BS</div>
-                                                <span class="text-xs font-black uppercase">Budi Santoso</span>
-                                            </div>
-                                        </td>
-                                        <td class="px-8 py-4 text-xs font-bold text-gray-700 uppercase tracking-tighter">Login System via Chrome Dashboard</td>
-                                        <td class="px-8 py-4 text-right">
-                                            <span class="px-3 py-1 bg-green-50 text-green-600 text-[9px] font-black rounded-full uppercase italic border border-green-100">Success</span>
-                                        </td>
+                                        <td class="px-8 py-4 uppercase text-xs font-black">Budi Santoso</td>
+                                        <td class="px-8 py-4 text-xs font-bold text-gray-700 uppercase">Updated Chart View</td>
+                                        <td class="px-8 py-4 text-right"><span class="px-3 py-1 bg-green-50 text-green-600 text-[9px] font-black rounded-full uppercase border border-green-100">Success</span></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -547,28 +407,73 @@
                 <div id="db-installation-list" class="hidden space-y-8">
                     <div class="flex justify-between items-center">
                         <h2 class="text-xl font-black text-[#1e3a8a] uppercase italic">Installation Database</h2>
-                        <button class="bg-black text-white px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">+ New Installation </button>
+                        <button class="bg-black text-white px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">+ New Installation</button>
                     </div>
                     <div class="bg-white rounded-[2.5rem] p-20 text-center border-2 border-dashed border-gray-100">
                         <p class="text-xs font-bold text-gray-400 uppercase tracking-widest italic">No entry found.</p>
                     </div>
                 </div>
-
             </main>
         </div>
     </section>
-
-    <script>
+   <!-- Part 7: JavaScript Functions ( Part 1 : State & Authentication) --> <script>
+        // --- 1. STATE MANAGEMENT ---
         let chartInstance = null;
         let mapInstance = null;
         let currentMode = '1y';
 
+        // --- 2. INITIALIZATION (CEK LOGIN SAAT START) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('isLoggedIn');
+            const savedRole = localStorage.getItem('userRole');
+            if (savedUser === 'true') {
+                showDashboard(savedRole);
+            } else {
+                showLoginPage();
+            }
+        });
+
+        // --- 3. AUTHENTICATION FUNCTIONS ---
+        function handleLogin(e) {
+            if (e) e.preventDefault();
+            // Bypass login (sesuai request sebelumnya)
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userRole', 'ADMINISTRATOR');
+            showDashboard('ADMINISTRATOR');
+        }
+
         function handleLogout() {
             if (confirm("Apakah Anda yakin ingin logout?")) {
+                localStorage.clear();
                 location.reload();
             }
         }
 
+        function togglePassword() {
+            const passwordInput = document.getElementById('pass-input');
+            const eyeIcon = document.getElementById('eye-icon');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
+                eyeIcon.style.color = '#2563eb';
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
+                eyeIcon.style.color = '#9ca3af';
+            }
+        }
+
+        function showDashboard(role) {
+            document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('dashboard-page').classList.remove('hidden');
+            switchMainTab('HOME'); // Default masuk ke Home
+        }
+
+        function showLoginPage() {
+            document.getElementById('login-page').classList.remove('hidden');
+            document.getElementById('dashboard-page').classList.add('hidden');
+        }
+       // --- 4. NAVIGATION LOGIC (TABS & SIDEBAR) ---
         function switchMainTab(tab) {
             const isHome = (tab === 'HOME');
             document.getElementById('nav-home').className = isHome ? 'px-8 py-4 text-sm font-black active-tab' : 'px-8 py-4 text-sm font-black text-gray-400 hover:text-blue-800 transition-colors';
@@ -582,284 +487,176 @@
                 document.getElementById('db-installation-list').classList.add('hidden');
                 switchHomeSection('service-dashboard');
             } else {
-                ['home-service-dashboard', 'home-milestone', 'home-activity-logs'].forEach(id => document.getElementById(id).classList.add('hidden'));
+                ['home-service-dashboard', 'home-milestone', 'home-activity-logs', 'home-parts-tracking'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.add('hidden');
+                });
                 switchDbSection('customer-list');
             }
         }
 
         function switchHomeSection(section) {
-    // 1. Tambahkan 'parts-tracking' di daftar sembunyi (Array)
-    ['service-dashboard', 'milestone', 'activity-logs', 'parts-tracking'].forEach(id => {
-        const el = document.getElementById('home-' + id);
-        if (el) el.classList.add('hidden');
-    });
+            ['service-dashboard', 'milestone', 'activity-logs', 'parts-tracking'].forEach(id => {
+                const el = document.getElementById('home-' + id);
+                if (el) el.classList.add('hidden');
+            });
 
-    // Tampilkan section yang dipilih
-    const target = document.getElementById('home-' + section);
-    if (target) target.classList.remove('hidden');
+            const target = document.getElementById('home-' + section);
+            if (target) target.classList.remove('hidden');
 
-    // 2. Tambahkan 'parts-tracking': 'side-parts' ke dalam daftar tombol
-    const btnIds = { 
-        'service-dashboard': 'side-service', 
-        'parts-tracking': 'side-parts', // <-- Ini yang bikin garis biru muncul
-        'milestone': 'side-milestone', 
-        'activity-logs': 'side-logs' 
-    };
+            const btnIds = { 
+                'service-dashboard': 'side-service', 
+                'parts-tracking': 'side-parts', 
+                'milestone': 'side-milestone', 
+                'activity-logs': 'side-logs' 
+            };
 
-    // Reset semua warna tombol
-    Object.values(btnIds).forEach(id => {
-        const btn = document.getElementById(id);
-        if (btn) {
-            btn.classList.remove('sidebar-active');
-            btn.classList.add('text-gray-400');
+            Object.values(btnIds).forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) btn.classList.remove('sidebar-active', 'text-blue-600');
+            });
+
+            const activeBtn = document.getElementById(btnIds[section]);
+            if (activeBtn) activeBtn.classList.add('sidebar-active');
+
+            if (section === 'service-dashboard') setTimeout(updateChart, 50);
+            if (section === 'milestone') setTimeout(initMap, 100);
         }
-    });
-
-    // 3. Pasang garis biru ke tombol yang aktif
-    const activeBtn = document.getElementById(btnIds[section]);
-    if (activeBtn) {
-        activeBtn.classList.add('sidebar-active');
-        activeBtn.classList.remove('text-gray-400');
-    }
-
-    // Jalankan fitur tambahan jika ada
-    if (section === 'service-dashboard') setTimeout(updateChart, 50);
-    if (section === 'milestone') setTimeout(initMap, 100);
-}
 
         function switchDbSection(section) {
             document.getElementById('db-customer-list').classList.toggle('hidden', section !== 'customer-list');
             document.getElementById('db-installation-list').classList.toggle('hidden', section !== 'installation-db');
             
-            document.getElementById('side-customer').className = (section === 'customer-list') ? 'sidebar-active w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black transition-all' : 'w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50';
-            document.getElementById('side-installation-db').className = (section === 'installation-db') ? 'sidebar-active w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black transition-all' : 'w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50';
-        }
-
-        // Fungsi untuk mengubah mode chart (Yearly, Monthly, Weekly)
+            const sideCust = document.getElementById('side-customer');
+            const sideInst = document.getElementById('side-installation-db');
+            
+            if (sideCust) sideCust.className = (section === 'customer-list') ? 'sidebar-active w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black transition-all' : 'w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50';
+            if (sideInst) sideInst.className = (section === 'installation-db') ? 'sidebar-active w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black transition-all' : 'w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50';
+        } 
+        // --- 5. CHART & FILTER LOGIC JavaScript Part 3 (Logika Grafik & Filter Kalender) ---
         function changeChartMode(mode) {
-    currentMode = mode;
-    // Update warna tombol
-    ['1y', '1m', '1w'].forEach(m => {
-        const btn = document.getElementById('btn-' + m);
-        if (m === mode) {
-            btn.classList.add('bg-blue-600', 'text-white');
-            btn.classList.remove('text-gray-400');
-        } else {
-            btn.classList.remove('bg-blue-600', 'text-white');
-            btn.classList.add('text-gray-400');
-        }
-    });
-
-    // Tampilkan dropdown bulan KECUALI di mode Yearly
-    const monthFilter = document.getElementById('month-filter-container');
-    if (mode === '1y') {
-        monthFilter.classList.add('hidden');
-    } else {
-        monthFilter.classList.remove('hidden');
-    }
-
-    updateChart();
-}
-
-function updateChart() {
-    const ctx = document.getElementById('serviceChart').getContext('2d');
-    if (chartInstance) chartInstance.destroy();
-
-    let labels, data, yMin, yMax, borderWidth, pointRadius, ptBg, ptBordWidth;
-
-    if (currentMode === '1y') {
-        // STYLE YEARLY (Gambar 1)
-        labels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-        data = [65, 78, 72, 95, 88, 110, 80, 95, 120, 100, 115, 130];
-        yMin = 60; yMax = 140; borderWidth = 4; pointRadius = 6; ptBg = '#1e40af'; ptBordWidth = 2;
-    } 
-    else if (currentMode === '1m') {
-        // STYLE MONTHLY (Gambar 2 - Data Rapat 1-30)
-        labels = Array.from({length: 30}, (_, i) => i + 1);
-        data = Array.from({length: 30}, () => Math.floor(Math.random() * 50) + 20); // Data acak biar terlihat berubah
-        yMin = 0; yMax = 80; borderWidth = 3; pointRadius = 3; ptBg = '#1e40af'; ptBordWidth = 2;
-    } 
-    else if (currentMode === '1w') {
-        // STYLE WEEKLY (Gambar 3 - Titik Hollow & Garis Tebal)
-        labels = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
-        data = [12, 19, 15, 8, 22, 30, 10];
-        yMin = 0; yMax = 40; borderWidth = 6; pointRadius = 8; ptBg = '#ffffff'; ptBordWidth = 4;
-    }
-
-    chartInstance = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                data: data,
-                borderColor: '#1e40af',
-                borderWidth: borderWidth,
-                tension: 0.4,
-                pointBackgroundColor: ptBg,
-                pointBorderColor: '#1e40af',
-                pointBorderWidth: ptBordWidth,
-                pointRadius: pointRadius,
-                fill: false
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-                y: { 
-                    min: yMin, 
-                    max: yMax, 
-                    ticks: { stepSize: (currentMode === '1w' ? 5 : 10), font: { weight: 'bold' } },
-                    grid: { color: '#f3f4f6' }
-                },
-                x: { 
-                    ticks: { font: { weight: 'bold' } },
-                    grid: { display: false } 
+            currentMode = mode;
+            ['1y', '1m', '1w'].forEach(m => {
+                const btn = document.getElementById('btn-' + m);
+                if (m === mode) {
+                    btn.classList.add('bg-blue-600', 'text-white');
+                    btn.classList.remove('text-gray-400');
+                } else {
+                    btn.classList.remove('bg-blue-600', 'text-white');
+                    btn.classList.add('text-gray-400');
                 }
+            });
+
+            const yearMonthGroup = document.getElementById('year-month-group');
+            const datePicker = document.getElementById('date-picker-container');
+            const monthFilter = document.getElementById('month-filter-container');
+
+            if (mode === '1w') {
+                yearMonthGroup.classList.add('hidden');
+                datePicker.classList.remove('hidden');
+            } else {
+                yearMonthGroup.classList.remove('hidden');
+                datePicker.classList.add('hidden');
+                if (mode === '1y') monthFilter.classList.add('hidden');
+                else monthFilter.classList.remove('hidden');
             }
+            updateChart();
         }
-    });
-}
 
+        function updateChart() {
+            const canvas = document.getElementById('serviceChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            if (chartInstance) chartInstance.destroy();
+
+            let labels, data, yMin, yMax, borderWidth, pointRadius, ptBg, ptBordWidth;
+            const labelSpan = document.getElementById('chart-period-label');
+            const year = document.getElementById('year-filter').value;
+            const month = parseInt(document.getElementById('month-filter').value);
+
+            if (currentMode === '1y') {
+                labels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                data = [65, 78, 72, 95, 88, 110, 80, 95, 120, 100, 115, 130];
+                yMin = 60; yMax = 140; borderWidth = 4; pointRadius = 6; ptBg = '#1e40af'; ptBordWidth = 2;
+                if (labelSpan) labelSpan.innerText = `(Tahun ${year})`;
+            } 
+            else if (currentMode === '1m') {
+                const days = new Date(year, month + 1, 0).getDate();
+                labels = Array.from({length: days}, (_, i) => i + 1);
+                data = Array.from({length: days}, () => Math.floor(Math.random() * 50) + 20);
+                yMin = 0; yMax = 80; borderWidth = 3; pointRadius = 3; ptBg = '#1e40af'; ptBordWidth = 2;
+                const monthName = document.getElementById('month-filter').options[month].text;
+                if (labelSpan) labelSpan.innerText = `(${monthName} ${year})`;
+            } 
+            else if (currentMode === '1w') {
+                let dateInput = document.getElementById('start-date-filter');
+                if (!dateInput.value) dateInput.value = new Date().toISOString().split('T')[0];
+                let startDate = new Date(dateInput.value);
+                labels = [];
+                const dayNames = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+                for (let i = 0; i < 7; i++) {
+                    let d = new Date(startDate);
+                    d.setDate(startDate.getDate() + i);
+                    labels.push(`${dayNames[d.getDay()]} (${d.getDate()}/${d.getMonth()+1})`);
+                }
+                if (labelSpan) labelSpan.innerText = `(Mulai ${dateInput.value})`;
+                data = [12, 19, 15, 8, 22, 30, 10];
+                yMin = 0; yMax = 40; borderWidth = 6; pointRadius = 8; ptBg = '#ffffff'; ptBordWidth = 4;
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data, borderColor: '#1e40af', borderWidth: borderWidth, tension: 0.4,
+                        pointBackgroundColor: ptBg, pointBorderColor: '#1e40af', pointBorderWidth: ptBordWidth,
+                        pointRadius: pointRadius, fill: false
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { min: yMin, max: yMax, ticks: { font: { weight: 'bold' } }, grid: { color: '#f3f4f6' } },
+                        x: { ticks: { font: { weight: 'bold' } }, grid: { display: false } }
+                    }
+                }
+            });
+        }
+        // --- 6. MAP LOGIC (LEAFLET) JavaScript Part 4 (Peta Milestone & Penutup) ---
         function initMap() {
-            if (mapInstance) return;
+            if (mapInstance) {
+                mapInstance.invalidateSize();
+                return;
+            }
+            // Inisialisasi peta fokus ke Indonesia
             mapInstance = L.map('map').setView([-2.5489, 118.0149], 5);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapInstance);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(mapInstance);
+
+            // Contoh Marker (Bisa ditambah sesuai data asli)
+            const locations = [
+                { lat: -6.2088, lon: 106.8456, name: "Jakarta - HQ" },
+                { lat: -7.2575, lon: 112.7521, name: "Surabaya Branch" },
+                { lat: -5.1476, lon: 119.4327, name: "Makassar Point" }
+            ];
+
+            locations.forEach(loc => {
+                L.marker([loc.lat, loc.lon]).addTo(mapInstance)
+                    .bindPopup(`<b class="uppercase font-black text-blue-600">${loc.name}</b><br>Service Unit Active`);
+            });
         }
 
+        // --- 7. SERVICE WORKER REGISTRATION ---
         if ('serviceWorker' in navigator) {
-         window.addEventListener('load', () => {
-         navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('Service Worker registered', reg))
-         .catch(err => console.log('Service Worker registration failed', err));
-  });
-}
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker Registered'))
+                    .catch(err => console.log('Service Worker Failed', err));
+            });
+        }
     </script>
-    <script>
-// 1. DATA USER (Simulasi, nanti bisa diganti Firebase)
-const users = [
-    { email: "admin@picolite.com", pass: "admin123", role: "ADMINISTRATOR" },
-    { email: "tech@picolite.com", pass: "tech123", role: "TEKNISI" }
-];
-
-// 2. CEK STATUS SAAT HALAMAN DIBUKA (Save Position)
-window.onload = function() {
-    const savedUser = localStorage.getItem('isLoggedIn');
-    const savedRole = localStorage.getItem('userRole');
-
-    if (savedUser === 'true') {
-        showDashboard(savedRole);
-    } else {
-        showLoginPage();
-    }
-};
-
-// 3. FUNGSI LOGIN
-
-// 4. FUNGSI LOGOUT (Bersihkan Posisi)
-function handleLogout() {
-    localStorage.clear();
-    location.reload(); // Refresh untuk kembali ke login
-}
-
-// 5. ATUR TAMPILAN BERDASARKAN ROLE
-function showDashboard(role) {
-    document.getElementById('login-page').classList.add('hidden');
-    document.getElementById('dashboard-page').classList.remove('hidden');
-
-    // Sembunyikan menu Administrator jika yang login adalah TEKNISI
-    const adminMenu = document.querySelectorAll('.admin-only');
-    if (role === 'TEKNISI') {
-        adminMenu.forEach(menu => menu.style.display = 'none');
-        document.getElementById('welcome-text').innerText = "Dashboard Teknisi";
-    } else {
-        adminMenu.forEach(menu => menu.style.display = 'block');
-        document.getElementById('welcome-text').innerText = "Dashboard Administrator";
-    }
-}
-
-function showLoginPage() {
-    document.getElementById('login-page').classList.remove('hidden');
-    document.getElementById('dashboard-page').classList.add('hidden');
-}
-</script>
-<script>
-
-    // CEK STATUS LOGIN (Nomor 2 yang tadi)
-    // Langsung jalankan tanpa menunggu window.onload agar tidak "kedip"
-    const savedUser = localStorage.getItem('isLoggedIn');
-    const savedRole = localStorage.getItem('userRole');
-
-    if (savedUser === 'true') {
-        // Fungsi untuk langsung ke dashboard
-        document.addEventListener("DOMContentLoaded", function() {
-            showDashboard(savedRole);
-        });
-    }
-    
-    // Fungsi-fungsi pembantu (Login, Logout, dll)
-   function handleLogin(e) {
-    if (e) e.preventDefault();
-
-    // --- KODE BYPASS (YANG AKTIF) ---
-    localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('userRole', 'ADMINISTRATOR');
-    document.getElementById('login-page').classList.add('hidden');
-    document.getElementById('dashboard-page').classList.remove('hidden');
-    if (typeof updateChart === "function") setTimeout(updateChart, 300);
-
-    /* // --- KODE ASLI (DI-DISABLE DULU) ---
-    const email = document.getElementById('email-input').value;
-    const pass = document.getElementById('pass-input').value;
-    const user = users.find(u => u.email === email && u.pass === pass);
-    if (user) {
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userRole', user.role);
-        // ... dst
-    } else {
-        alert("Salah!");
-    }
-    */
-}
-    function showDashboard(role) { /* ... isi fungsi ... */ }
-</script>
-
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.bundle.min.js"></script>
-<script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js');
-    }
-
-    function togglePassword() {
-    const passwordInput = document.getElementById('pass-input');
-    const eyeIcon = document.getElementById('eye-icon');
-
-    // Cek apakah input ditemukan (mencegah error)
-    if (!passwordInput) {
-        console.error("Input dengan ID 'pass-input' tidak ditemukan!");
-        return;
-    }
-
-    if (passwordInput.type === 'password') {
-        // Ubah jadi teks (kelihatan)
-        passwordInput.type = 'text';
-        // Ganti ikon jadi mata dicoret
-        eyeIcon.classList.remove('fa-eye');
-        eyeIcon.classList.add('fa-eye-slash');
-        eyeIcon.style.color = '#2563eb'; // Kasih warna biru pas aktif
-    } else {
-        // Balikin jadi titik-titik
-        passwordInput.type = 'password';
-        // Balikin ikon jadi mata biasa
-        eyeIcon.classList.remove('fa-eye-slash');
-        eyeIcon.classList.add('fa-eye');
-        eyeIcon.style.color = '#9ca3af'; // Balikin warna abu-abu
-    }
-}
-</script>
-
-</body>
 </body>
 </html>
