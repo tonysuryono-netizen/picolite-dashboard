@@ -140,6 +140,7 @@
     .mobile-header { display: none; }
 </style>
 </head>
+
 <body class="text-gray-900 overflow-x-hidden">
 
     <section id="login-page" class="min-h-screen flex items-center justify-center p-4">
@@ -158,9 +159,9 @@
             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                 <i class="fas fa-user"></i>
             </span>
-            <input type="text" id="email-input" required
+            <input type="text" id="email-input" 
                 class="w-full pl-10 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 font-semibold transition-all shadow-sm" 
-                placeholder="Masukkan email Anda">
+                placeholder="Email atau No. Telepon Anda">
         </div>
     </div>
 
@@ -170,13 +171,18 @@
             <a href="#" class="text-xs font-black text-blue-600 hover:text-blue-800 transition-colors">LUPA PASSWORD?</a>
         </div>
         <div class="relative">
-            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                <i class="fas fa-lock"></i>
-            </span>
-            <input type="password" id="pass-input" required
-                class="w-full pl-10 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 font-semibold transition-all shadow-sm" 
-                placeholder="Masukkan password Anda">
-        </div>
+    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+        <i class="fas fa-lock"></i>
+    </span>
+    
+    <input type="password" id="pass-input" 
+        class="w-full pl-10 pr-12 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 font-semibold transition-all shadow-sm" 
+        placeholder="Masukkan password Anda">
+    
+    <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-blue-600 transition-colors">
+        <i id="eye-icon" class="fas fa-eye"></i>
+    </button>
+</div>
     </div>
 
     <div class="flex items-center gap-3 py-2">
@@ -186,7 +192,7 @@
 
     <button type="submit" 
         class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-5 rounded-2xl transition-all uppercase tracking-[0.2em] shadow-xl shadow-blue-200 active:scale-[0.97] flex justify-center items-center gap-3">
-        <span>MASUK KE SISTEM</span>
+        <span>LOG IN</span>
         <i class="fas fa-arrow-right text-sm"></i>
     </button>
 </form>
@@ -254,32 +260,38 @@
 
         <div class="flex-1 flex">
             <aside class="w-64 bg-white border-r flex flex-col p-4 space-y-2 shrink-0 sticky top-[138px] h-[calc(100vh-138px)]">
-                <div id="side-menu-home">
-                    <p class="text-[10px] font-black text-gray-400 uppercase px-4 mb-2 tracking-widest">Home Menu</p>
-                    <button onclick="switchHomeSection('service-dashboard')" id="side-service" class="sidebar-active w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black transition-all">
-                        <i class="fa-solid fa-gauge-high"></i> SERVICE DASHBOARD
-                    </button>
-                     <button onclick="switchHomeSection('parts-tracking')" id="side-parts" class="sidebar-active w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black transition-all">
-                        <i class="fa-solid fa-gauge-high"></i> SPAREPARTS TRACKING
-                    </button>
-                    <button onclick="switchHomeSection('milestone')" id="side-milestone" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
-                        <i class="fa-solid fa-map-location-dot"></i> MILESTONE
-                    </button>
-                    <button onclick="switchHomeSection('activity-logs')" id="side-logs" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
-                        <i class="fa-solid fa-clock-rotate-left"></i> ACTIVITY LOGS
-                    </button>
-                </div>
+    <div id="side-menu-home">
+        <p class="text-[10px] font-black text-gray-400 uppercase px-4 mb-2 tracking-widest">Home Menu</p>
+        
+        <button onclick="switchHomeSection('service-dashboard')" id="side-service" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
+            <i class="fa-solid fa-gauge-high"></i> SERVICE DASHBOARD
+        </button>
 
-                <div id="side-menu-database" class="hidden">
-                    <p class="text-[10px] font-black text-gray-400 uppercase px-4 mb-2 tracking-widest">Database Menu</p>
-                    <button onclick="switchDbSection('customer-list')" id="side-customer" class="sidebar-active w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black transition-all">
-                        <i class="fa-solid fa-hospital"></i> CUSTOMER DATA
-                    </button>
-                    <button onclick="switchDbSection('installation-db')" id="side-installation-db" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
-                        <i class="fa-solid fa-database"></i> INSTALLATION DATABASE
-                    </button>
-                </div>
-            </aside>
+        <button onclick="switchHomeSection('parts-tracking')" id="side-parts" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
+            <i class="fa-solid fa-gauge-high"></i> SPAREPARTS TRACKING
+        </button>
+
+        <button onclick="switchHomeSection('milestone')" id="side-milestone" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
+            <i class="fa-solid fa-map-location-dot"></i> MILESTONE
+        </button>
+
+        <button onclick="switchHomeSection('activity-logs')" id="side-logs" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
+            <i class="fa-solid fa-clock-rotate-left"></i> ACTIVITY LOGS
+        </button>
+    </div>
+
+    <div id="side-menu-database" class="hidden">
+        <p class="text-[10px] font-black text-gray-400 uppercase px-4 mb-2 tracking-widest">Database Menu</p>
+        
+        <button onclick="switchDbSection('customer-list')" id="side-customer" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
+            <i class="fa-solid fa-hospital"></i> CUSTOMER DATA
+        </button>
+
+        <button onclick="switchDbSection('installation-db')" id="side-installation-db" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-400 transition-all hover:bg-gray-50">
+            <i class="fa-solid fa-database"></i> INSTALLATION DATABASE
+        </button>
+    </div>
+</aside>
 
             <main class="flex-1 p-8 bg-[#f8fafc]">
                 
@@ -552,13 +564,6 @@
         let mapInstance = null;
         let currentMode = '1y';
 
-        function handleLogin(e) {
-            e.preventDefault();
-            document.getElementById('login-page').classList.add('hidden');
-            document.getElementById('dashboard-page').classList.remove('hidden');
-            setTimeout(updateChart, 300);
-        }
-
         function handleLogout() {
             if (confirm("Apakah Anda yakin ingin logout?")) {
                 location.reload();
@@ -584,19 +589,44 @@
         }
 
         function switchHomeSection(section) {
-            ['service-dashboard', 'milestone', 'activity-logs'].forEach(id => document.getElementById('home-' + id).classList.add('hidden'));
-            document.getElementById('home-' + section).classList.remove('hidden');
+    // 1. Tambahkan 'parts-tracking' di daftar sembunyi (Array)
+    ['service-dashboard', 'milestone', 'activity-logs', 'parts-tracking'].forEach(id => {
+        const el = document.getElementById('home-' + id);
+        if (el) el.classList.add('hidden');
+    });
 
-            const btnIds = { 'service-dashboard': 'side-service', 'milestone': 'side-milestone', 'activity-logs': 'side-logs' };
-            Object.values(btnIds).forEach(id => {
-                document.getElementById(id).classList.remove('sidebar-active');
-                document.getElementById(id).classList.add('text-gray-400');
-            });
-            document.getElementById(btnIds[section]).classList.add('sidebar-active');
+    // Tampilkan section yang dipilih
+    const target = document.getElementById('home-' + section);
+    if (target) target.classList.remove('hidden');
 
-            if (section === 'service-dashboard') setTimeout(updateChart, 50);
-            if (section === 'milestone') setTimeout(initMap, 100);
+    // 2. Tambahkan 'parts-tracking': 'side-parts' ke dalam daftar tombol
+    const btnIds = { 
+        'service-dashboard': 'side-service', 
+        'parts-tracking': 'side-parts', // <-- Ini yang bikin garis biru muncul
+        'milestone': 'side-milestone', 
+        'activity-logs': 'side-logs' 
+    };
+
+    // Reset semua warna tombol
+    Object.values(btnIds).forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+            btn.classList.remove('sidebar-active');
+            btn.classList.add('text-gray-400');
         }
+    });
+
+    // 3. Pasang garis biru ke tombol yang aktif
+    const activeBtn = document.getElementById(btnIds[section]);
+    if (activeBtn) {
+        activeBtn.classList.add('sidebar-active');
+        activeBtn.classList.remove('text-gray-400');
+    }
+
+    // Jalankan fitur tambahan jika ada
+    if (section === 'service-dashboard') setTimeout(updateChart, 50);
+    if (section === 'milestone') setTimeout(initMap, 100);
+}
 
         function switchDbSection(section) {
             document.getElementById('db-customer-list').classList.toggle('hidden', section !== 'customer-list');
@@ -727,24 +757,6 @@ window.onload = function() {
 };
 
 // 3. FUNGSI LOGIN
-function handleLogin(e) {
-    e.preventDefault();
-    const email = document.getElementById('email-input').value;
-    const pass = document.getElementById('pass-input').value;
-
-    const user = users.find(u => u.email === email && u.pass === pass);
-
-    if (user) {
-        // SIMPAN POSISI KE STORAGE
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userRole', user.role);
-        localStorage.setItem('userEmail', user.email);
-        
-        showDashboard(user.role);
-    } else {
-        alert("Email atau Password salah!");
-    }
-}
 
 // 4. FUNGSI LOGOUT (Bersihkan Posisi)
 function handleLogout() {
@@ -774,11 +786,6 @@ function showLoginPage() {
 }
 </script>
 <script>
-    // Data User
-    const users = [
-        { email: "admin@picolite.com", pass: "admin123", role: "ADMINISTRATOR" },
-        { email: "tech@picolite.com", pass: "tech123", role: "TEKNISI" }
-    ];
 
     // CEK STATUS LOGIN (Nomor 2 yang tadi)
     // Langsung jalankan tanpa menunggu window.onload agar tidak "kedip"
@@ -793,7 +800,29 @@ function showLoginPage() {
     }
     
     // Fungsi-fungsi pembantu (Login, Logout, dll)
-    function handleLogin(e) { /* ... isi fungsi ... */ }
+   function handleLogin(e) {
+    if (e) e.preventDefault();
+
+    // --- KODE BYPASS (YANG AKTIF) ---
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('userRole', 'ADMINISTRATOR');
+    document.getElementById('login-page').classList.add('hidden');
+    document.getElementById('dashboard-page').classList.remove('hidden');
+    if (typeof updateChart === "function") setTimeout(updateChart, 300);
+
+    /* // --- KODE ASLI (DI-DISABLE DULU) ---
+    const email = document.getElementById('email-input').value;
+    const pass = document.getElementById('pass-input').value;
+    const user = users.find(u => u.email === email && u.pass === pass);
+    if (user) {
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('userRole', user.role);
+        // ... dst
+    } else {
+        alert("Salah!");
+    }
+    */
+}
     function showDashboard(role) { /* ... isi fungsi ... */ }
 </script>
 
@@ -803,6 +832,33 @@ function showLoginPage() {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js');
     }
+
+    function togglePassword() {
+    const passwordInput = document.getElementById('pass-input');
+    const eyeIcon = document.getElementById('eye-icon');
+
+    // Cek apakah input ditemukan (mencegah error)
+    if (!passwordInput) {
+        console.error("Input dengan ID 'pass-input' tidak ditemukan!");
+        return;
+    }
+
+    if (passwordInput.type === 'password') {
+        // Ubah jadi teks (kelihatan)
+        passwordInput.type = 'text';
+        // Ganti ikon jadi mata dicoret
+        eyeIcon.classList.remove('fa-eye');
+        eyeIcon.classList.add('fa-eye-slash');
+        eyeIcon.style.color = '#2563eb'; // Kasih warna biru pas aktif
+    } else {
+        // Balikin jadi titik-titik
+        passwordInput.type = 'password';
+        // Balikin ikon jadi mata biasa
+        eyeIcon.classList.remove('fa-eye-slash');
+        eyeIcon.classList.add('fa-eye');
+        eyeIcon.style.color = '#9ca3af'; // Balikin warna abu-abu
+    }
+}
 </script>
 
 </body>
