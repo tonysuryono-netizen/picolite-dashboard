@@ -88,6 +88,57 @@
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
+    <style>
+    /* Perbaikan untuk Mobile */
+    @media (max-width: 768px) {
+        /* 1. Sembunyikan Sidebar asli di HP */
+        #sidebar {
+            position: fixed;
+            left: -100%; /* Sembunyi di kiri */
+            top: 0;
+            bottom: 0;
+            width: 280px;
+            z-index: 999;
+            transition: 0.3s ease-all;
+            background: white;
+            box-shadow: 10px 0 15px rgba(0,0,0,0.1);
+        }
+
+        /* 2. Class untuk memunculkan sidebar */
+        #sidebar.active {
+            left: 0;
+        }
+
+        /* 3. Buat konten utama jadi full screen di HP */
+        .main-content {
+            margin-left: 0 !important;
+            padding: 15px !important;
+            width: 100% !important;
+        }
+
+        /* 4. Agar tabel bisa di-swipe kanan kiri (tidak pecah) */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* 5. Header HP agar ada tombol menunya */
+        .mobile-header {
+            display: flex !important;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: white;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+    }
+
+    /* Sembunyikan Header Mobile di Laptop */
+    .mobile-header { display: none; }
+</style>
 </head>
 <body class="text-gray-900 overflow-x-hidden">
 
