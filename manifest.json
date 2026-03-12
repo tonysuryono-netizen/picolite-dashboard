@@ -1,11 +1,11 @@
 {
-  "name": "Picolite Service Management",
+  "name": "Picolite Service v0.2",
   "short_name": "Picolite",
-  "description": "Dashboard Management Service Picolite",
+  "description": "Picolite Service Management Dashboard",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1e40af",
+  "background_color": "#f3f4f6",
+  "theme_color": "#1e3a8a",
   "icons": [
     {
       "src": "PICO LOGO 512P NEW.png",
