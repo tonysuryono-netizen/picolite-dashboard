@@ -1,10 +1,11 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Service Dashboard v0.3.0 Beta (Build 20260313.0225)</title>
-    
+
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -13,63 +14,126 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-        
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; overflow-x: hidden; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        .active-tab { border-bottom: 4px solid #1e40af; color: #1e40af; font-weight: 800; }
-        .sidebar-active { background-color: #f1f5f9; color: #1e40af; border-right: 4px solid #1e40af; font-weight: 800; }
 
-        .chart-container { position: relative; height: 350px; width: 100%; }
-        #leaflet-map { height: 100%; width: 100%; border-radius: 1.5rem; z-index: 10; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .active-tab {
+            border-bottom: 4px solid #1e40af;
+            color: #1e40af;
+            font-weight: 800;
+        }
+
+        .sidebar-active {
+            background-color: #f1f5f9;
+            color: #1e40af;
+            border-right: 4px solid #1e40af;
+            font-weight: 800;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
+        }
+
+        #leaflet-map {
+            height: 100%;
+            width: 100%;
+            border-radius: 1.5rem;
+            z-index: 10;
+        }
 
         @media (max-width: 768px) {
-            body { padding-bottom: 80px; } 
+            body {
+                padding-bottom: 80px;
+            }
+
             .bottom-nav-fix {
-                position: fixed; bottom: 0; left: 0; right: 0; height: 70px;
-                background: white; display: flex; justify-content: space-around; align-items: center;
-                z-index: 9990; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); border-top: 1px solid #e5e7eb;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 70px;
+                background: white;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                z-index: 9990;
+                box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.05);
+                border-top: 1px solid #e5e7eb;
             }
         }
 
-        @media (min-width: 769px) { .bottom-nav-fix, #bottom-sheet, #menu-overlay { display: none !important; } }
+        @media (min-width: 769px) {
+
+            .bottom-nav-fix,
+            #bottom-sheet,
+            #menu-overlay {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 
 <body class="text-gray-900 text-sm">
 
-    <section id="login-page" class="fixed inset-0 z-[99999] bg-[#f8fafc] flex items-center justify-center p-4 transition-opacity duration-300">
-        <div class="bg-white w-full max-w-[480px] p-10 md:p-12 rounded-[2rem] shadow-xl border border-gray-100 relative">
+    <section id="login-page"
+        class="fixed inset-0 z-[99999] bg-[#f8fafc] flex items-center justify-center p-4 transition-opacity duration-300">
+        <div
+            class="bg-white w-full max-w-[480px] p-10 md:p-12 rounded-[2rem] shadow-xl border border-gray-100 relative">
             <div class="text-center mb-8">
-                <div class="flex justify-center mb-4"><img src="PICOLITE LOGO HAKI copy.png" class="w-full max-w-[200px] h-auto"></div>
+                <div class="flex justify-center mb-4"><img src="PICOLITE LOGO HAKI copy.png"
+                        class="w-full max-w-[200px] h-auto"></div>
                 <h1 class="text-xl md:text-2xl font-bold text-[#1e3a8a]">Service Management</h1>
             </div>
             <form onsubmit="handleLogin(event)" class="space-y-5">
                 <div>
-                    <label class="text-xs font-bold text-gray-700 block mb-2 uppercase tracking-wide">Email / No. Telepon</label>
+                    <label class="text-xs font-bold text-gray-700 block mb-2 uppercase tracking-wide">Email / No.
+                        Telepon</label>
                     <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400"><i class="fas fa-user"></i></span>
-                        <input type="text" id="email-input" class="w-full pl-11 pr-4 py-3 md:py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-blue-600 font-semibold transition-all">
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400"><i
+                                class="fas fa-user"></i></span>
+                        <input type="text" id="email-input"
+                            class="w-full pl-11 pr-4 py-3 md:py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-blue-600 font-semibold transition-all">
                     </div>
                 </div>
-                <div> 
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400"><i class="fas fa-lock"></i></span>
-                        <input type="password" id="pass-input" class="w-full pl-11 pr-12 py-3 md:py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-blue-600 font-semibold transition-all" placeholder="Password">
-                        <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400"><i id="eye-icon" class="fas fa-eye"></i></button>
-                    </div>
-                </div>
-                
                 <div>
-                    <label class="text-xs font-bold text-gray-700 block mb-2 uppercase tracking-wide mt-2">Masuk Sebagai (Simulasi Role):</label>
-                    <select id="role-selector" class="w-full py-3 px-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-blue-600 font-semibold">
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400"><i
+                                class="fas fa-lock"></i></span>
+                        <input type="password" id="pass-input"
+                            class="w-full pl-11 pr-12 py-3 md:py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-blue-600 font-semibold transition-all"
+                            placeholder="Password">
+                        <button type="button" onclick="togglePassword()"
+                            class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400"><i id="eye-icon"
+                                class="fas fa-eye"></i></button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-gray-700 block mb-2 uppercase tracking-wide mt-2">Masuk Sebagai
+                        (Simulasi Role):</label>
+                    <select id="role-selector"
+                        class="w-full py-3 px-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-blue-600 font-semibold">
                         <option value="Administrator">Administrator</option>
                         <option value="Manager">Manager</option>
                         <option value="Admin">Admin</option>
@@ -77,7 +141,8 @@
                     </select>
                 </div>
 
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-2xl transition-all uppercase tracking-[0.2em] shadow-lg flex justify-center items-center gap-3 mt-4">
+                <button type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-2xl transition-all uppercase tracking-[0.2em] shadow-lg flex justify-center items-center gap-3 mt-4">
                     <span>LOG IN</span><i class="fas fa-arrow-right text-sm"></i>
                 </button>
             </form>
@@ -85,29 +150,33 @@
     </section>
 
     <section id="dashboard-page" class="hidden min-h-screen flex flex-col">
-        
+
         <header class="bg-white sticky top-0 z-40 shadow-sm flex flex-col">
-            
+
             <div class="md:hidden flex flex-col w-full">
                 <div class="flex flex-col justify-center items-center py-5 border-b border-gray-50 relative">
                     <img src="PICOLITE LOGO HAKI copy.png" alt="Logo" class="w-[140px] h-auto object-contain">
                 </div>
-                
+
                 <div class="flex justify-between items-center px-5 py-4 bg-gray-50/80">
                     <div class="flex flex-col items-start w-1/3">
                         <p class="text-[11px] font-black uppercase leading-tight text-gray-800">BUDI SANTOSO</p>
-                        <button class="mt-2 text-[9px] font-bold text-gray-400 hover:text-blue-600 uppercase tracking-widest transition-colors flex items-center gap-1">
+                        <button
+                            class="mt-2 text-[9px] font-bold text-gray-400 hover:text-blue-600 uppercase tracking-widest transition-colors flex items-center gap-1">
                             <i class="fa-solid fa-gear"></i> Settings
                         </button>
                     </div>
 
                     <div class="flex justify-center items-center w-1/3">
-                        <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=1e40af&color=fff" class="w-12 h-12 rounded-full border-2 border-white shadow-sm">
+                        <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=1e40af&color=fff"
+                            class="w-12 h-12 rounded-full border-2 border-white shadow-sm">
                     </div>
 
                     <div class="flex flex-col items-end w-1/3 text-right">
-                        <p id="user-role-mobile" class="text-[10px] font-bold text-gray-500 uppercase leading-tight">Administrator</p>
-                        <button onclick="handleLogout()" class="mt-2 text-[9px] font-black text-red-500 hover:text-red-700 uppercase flex items-center gap-1 transition-colors">
+                        <p id="user-role-mobile" class="text-[10px] font-bold text-gray-500 uppercase leading-tight">
+                            Administrator</p>
+                        <button onclick="handleLogout()"
+                            class="mt-2 text-[9px] font-black text-red-500 hover:text-red-700 uppercase flex items-center gap-1 transition-colors">
                             <i class="fa-solid fa-power-off"></i> LOG OUT
                         </button>
                     </div>
@@ -118,30 +187,40 @@
                 <div class="flex items-center gap-3">
                     <img src="PICOLITE LOGO HAKI copy.png" alt="Logo" class="w-[160px] h-auto object-contain">
                     <div class="border-l-2 border-gray-200 pl-4">
-                        <div class="text-[11px] font-black text-blue-800 tracking-[0.2em] uppercase">Service Management</div>
+                        <div class="text-[11px] font-black text-blue-800 tracking-[0.2em] uppercase">Service Management
+                        </div>
                     </div>
                 </div>
-                
+
                 <div class="flex items-center gap-4 shrink-0">
                     <div class="flex flex-col items-end justify-center border-l border-gray-200 pl-5">
                         <p class="text-sm font-black uppercase leading-none text-gray-800">BUDI SANTOSO</p>
-                        <p id="user-role-desktop" class="text-[10px] font-bold text-gray-500 uppercase mt-1">Administrator</p>
+                        <p id="user-role-desktop" class="text-[10px] font-bold text-gray-500 uppercase mt-1">
+                            Administrator</p>
                     </div>
                     <div class="flex flex-col items-center">
-                        <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=1e40af&color=fff" class="w-11 h-11 rounded-full border-2 border-gray-100 shadow-sm">
-                        <button class="mt-1 text-[9px] font-bold text-gray-400 hover:text-blue-600 uppercase transition-colors flex items-center gap-1"><i class="fa-solid fa-gear"></i> Settings</button>
+                        <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=1e40af&color=fff"
+                            class="w-11 h-11 rounded-full border-2 border-gray-100 shadow-sm">
+                        <button
+                            class="mt-1 text-[9px] font-bold text-gray-400 hover:text-blue-600 uppercase transition-colors flex items-center gap-1"><i
+                                class="fa-solid fa-gear"></i> Settings</button>
                     </div>
                 </div>
             </div>
 
-            <nav class="flex items-center px-4 md:px-8 border-t border-gray-100 bg-white relative w-full shadow-[0_4px_6px_-1px_rgba(0,0,0,0.02)]">
+            <nav
+                class="flex items-center px-4 md:px-8 border-t border-gray-100 bg-white relative w-full shadow-[0_4px_6px_-1px_rgba(0,0,0,0.02)]">
                 <div class="flex justify-center items-center gap-4 md:gap-8 flex-1 overflow-x-auto no-scrollbar">
-                    <button id="nav-home" onclick="switchMainTab('HOME')" class="px-2 py-3 text-[11px] md:text-xs font-bold whitespace-nowrap active-tab transition-all uppercase tracking-widest border-b-4 border-transparent">HOME</button>
-                    <button id="nav-db" onclick="switchMainTab('DATABASE')" class="px-2 py-3 text-[11px] md:text-xs font-bold text-gray-500 hover:text-blue-600 whitespace-nowrap transition-all uppercase tracking-widest border-b-4 border-transparent">DATABASE</button>
-                    <button id="nav-service-tab" onclick="switchMainTab('SERVICE')" class="px-2 py-3 text-[11px] md:text-xs font-bold text-gray-500 hover:text-blue-600 whitespace-nowrap transition-all uppercase tracking-widest border-b-4 border-transparent">SERVICE</button>
+                    <button id="nav-home" onclick="switchMainTab('HOME')"
+                        class="px-2 py-3 text-[11px] md:text-xs font-bold whitespace-nowrap active-tab transition-all uppercase tracking-widest border-b-4 border-transparent">HOME</button>
+                    <button id="nav-db" onclick="switchMainTab('DATABASE')"
+                        class="px-2 py-3 text-[11px] md:text-xs font-bold text-gray-500 hover:text-blue-600 whitespace-nowrap transition-all uppercase tracking-widest border-b-4 border-transparent">DATABASE</button>
+                    <button id="nav-service-tab" onclick="switchMainTab('SERVICE')"
+                        class="px-2 py-3 text-[11px] md:text-xs font-bold text-gray-500 hover:text-blue-600 whitespace-nowrap transition-all uppercase tracking-widest border-b-4 border-transparent">SERVICE</button>
                 </div>
                 <div class="hidden md:flex absolute right-8 items-center h-full">
-                    <button onclick="handleLogout()" class="text-[10px] font-black text-red-500 hover:text-red-700 uppercase tracking-tighter cursor-pointer flex items-center gap-1.5 transition-colors">
+                    <button onclick="handleLogout()"
+                        class="text-[10px] font-black text-red-500 hover:text-red-700 uppercase tracking-tighter cursor-pointer flex items-center gap-1.5 transition-colors">
                         <i class="fa-solid fa-power-off"></i> LOG OUT
                     </button>
                 </div>
@@ -149,68 +228,111 @@
         </header>
 
         <div class="flex-1 flex w-full relative">
-            
-            <aside id="sidebar" class="hidden md:flex w-64 bg-white border-r flex-col p-4 shrink-0 sticky top-[125px] h-[calc(100vh-125px)] overflow-y-auto">                
+
+            <aside id="sidebar"
+                class="hidden md:flex w-64 bg-white border-r flex-col p-4 shrink-0 sticky top-[125px] h-[calc(100vh-125px)] overflow-y-auto">
                 <div id="side-menu-home" class="space-y-1">
-                    <p class="text-[10px] font-black text-gray-400 uppercase px-4 py-2 tracking-widest mt-2">Home Menu</p>
-                    <button onclick="switchHomeSection('service-dashboard')" id="side-service" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-500 transition-all hover:bg-gray-50 sidebar-active">
+                    <p class="text-[10px] font-black text-gray-400 uppercase px-4 py-2 tracking-widest mt-2">Home Menu
+                    </p>
+                    <button onclick="switchHomeSection('service-dashboard')" id="side-service"
+                        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-500 transition-all hover:bg-gray-50 sidebar-active">
                         <i class="fa-solid fa-gauge-high w-4 text-center"></i> SERVICE DASHBOARD
                     </button>
-                    <button onclick="switchHomeSection('parts-tracking')" id="side-parts" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-500 transition-all hover:bg-gray-50">
+                    <button onclick="switchHomeSection('parts-tracking')" id="side-parts"
+                        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-500 transition-all hover:bg-gray-50">
                         <i class="fa-solid fa-boxes-stacked w-4 text-center"></i> SPAREPARTS TRACKING
                     </button>
-                    <button onclick="switchHomeSection('milestone')" id="side-milestone" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-500 transition-all hover:bg-gray-50">
+                    <button onclick="switchHomeSection('milestone')" id="side-milestone"
+                        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-500 transition-all hover:bg-gray-50">
                         <i class="fa-solid fa-map-location-dot w-4 text-center"></i> MILESTONE MAP
                     </button>
-                    <button onclick="switchHomeSection('activity-logs')" id="side-logs" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-500 transition-all hover:bg-gray-50">
+                    <button onclick="switchHomeSection('activity-logs')" id="side-logs"
+                        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-500 transition-all hover:bg-gray-50">
                         <i class="fa-solid fa-clock-rotate-left w-4 text-center"></i> ACTIVITY LOGS
                     </button>
                 </div>
                 <div id="side-menu-database" class="hidden space-y-1">
-                    <p class="text-[10px] font-black text-gray-400 uppercase px-4 py-2 tracking-widest mt-2">Database Menu</p>
-                    <button onclick="switchDbSection('customer-list')" id="side-customer" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-500 transition-all hover:bg-gray-50">
+                    <p class="text-[10px] font-black text-gray-400 uppercase px-4 py-2 tracking-widest mt-2">Database
+                        Menu</p>
+                    <button onclick="switchDbSection('customer-list')" id="side-customer"
+                        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-500 transition-all hover:bg-gray-50">
                         <i class="fa-solid fa-hospital w-4 text-center"></i> CUSTOMER DATA
                     </button>
-                    <button onclick="switchDbSection('installation-list')" id="side-installation-db" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-500 transition-all hover:bg-gray-50">
+                    <button onclick="switchDbSection('installation-list')" id="side-installation-db"
+                        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black text-gray-500 transition-all hover:bg-gray-50">
                         <i class="fa-solid fa-database w-4 text-center"></i> INSTALLATION DB
                     </button>
                 </div>
                 <div id="side-menu-service" class="hidden space-y-1">
-                    <p class="text-[10px] font-black text-gray-400 uppercase px-4 py-2 tracking-widest mt-2">Service Operations</p>
+                    <p class="text-[10px] font-black text-gray-400 uppercase px-4 py-2 tracking-widest mt-2">Service
+                        Operations</p>
                     <div class="px-4 py-3 text-xs font-bold text-gray-400 italic">Sub-menu belum tersedia.</div>
                 </div>
             </aside>
-            
+
             <main class="flex-1 p-4 md:p-8 min-w-0 bg-[#f8fafc]">
-                
+
                 <div id="wrapper-home" class="block">
                     <div id="home-service-dashboard" class="space-y-6">
                         <h3 class="font-black text-gray-700 uppercase text-sm tracking-widest flex items-center gap-2">
                             <i class="fa-solid fa-clipboard-list text-blue-600"></i> Service Status Overview
                         </h3>
                         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
-                            <div class="bg-white p-4 md:p-5 rounded-2xl border border-t-4 border-t-sky-400 shadow-sm"><p class="text-[10px] font-black text-gray-400 uppercase mb-1">Request</p><p class="text-2xl md:text-3xl font-black text-sky-600">12</p></div>
-                            <div class="bg-white p-4 md:p-5 rounded-2xl border border-t-4 border-t-indigo-400 shadow-sm"><p class="text-[10px] font-black text-gray-400 uppercase mb-1">Assigned</p><p class="text-2xl md:text-3xl font-black text-indigo-600">8</p></div>
-                            <div class="bg-white p-4 md:p-5 rounded-2xl border border-t-4 border-t-yellow-400 shadow-sm"><p class="text-[10px] font-black text-gray-400 uppercase mb-1">WIP</p><p class="text-2xl md:text-3xl font-black text-yellow-600">15</p></div>
-                            <div class="bg-white p-4 md:p-5 rounded-2xl border border-t-4 border-t-green-500 shadow-sm"><p class="text-[10px] font-black text-gray-400 uppercase mb-1">Solved</p><p class="text-2xl md:text-3xl font-black text-green-600">42</p></div>
-                            <div class="bg-white p-4 md:p-5 rounded-2xl border border-t-4 border-t-red-500 shadow-sm"><p class="text-[10px] font-black text-gray-400 uppercase mb-1">Unsolved</p><p class="text-2xl md:text-3xl font-black text-red-600">3</p></div>
-                            <div class="bg-white p-4 md:p-5 rounded-2xl border border-t-4 border-t-gray-400 shadow-sm"><p class="text-[10px] font-black text-gray-400 uppercase mb-1">Cancelled</p><p class="text-2xl md:text-3xl font-black text-gray-500">5</p></div>
+                            <div class="bg-white p-4 md:p-5 rounded-2xl border border-t-4 border-t-sky-400 shadow-sm">
+                                <p class="text-[10px] font-black text-gray-400 uppercase mb-1">Request</p>
+                                <p class="text-2xl md:text-3xl font-black text-sky-600">12</p>
+                            </div>
+                            <div
+                                class="bg-white p-4 md:p-5 rounded-2xl border border-t-4 border-t-indigo-400 shadow-sm">
+                                <p class="text-[10px] font-black text-gray-400 uppercase mb-1">Assigned</p>
+                                <p class="text-2xl md:text-3xl font-black text-indigo-600">8</p>
+                            </div>
+                            <div
+                                class="bg-white p-4 md:p-5 rounded-2xl border border-t-4 border-t-yellow-400 shadow-sm">
+                                <p class="text-[10px] font-black text-gray-400 uppercase mb-1">WIP</p>
+                                <p class="text-2xl md:text-3xl font-black text-yellow-600">15</p>
+                            </div>
+                            <div class="bg-white p-4 md:p-5 rounded-2xl border border-t-4 border-t-green-500 shadow-sm">
+                                <p class="text-[10px] font-black text-gray-400 uppercase mb-1">Solved</p>
+                                <p class="text-2xl md:text-3xl font-black text-green-600">42</p>
+                            </div>
+                            <div class="bg-white p-4 md:p-5 rounded-2xl border border-t-4 border-t-red-500 shadow-sm">
+                                <p class="text-[10px] font-black text-gray-400 uppercase mb-1">Unsolved</p>
+                                <p class="text-2xl md:text-3xl font-black text-red-600">3</p>
+                            </div>
+                            <div class="bg-white p-4 md:p-5 rounded-2xl border border-t-4 border-t-gray-400 shadow-sm">
+                                <p class="text-[10px] font-black text-gray-400 uppercase mb-1">Cancelled</p>
+                                <p class="text-2xl md:text-3xl font-black text-gray-500">5</p>
+                            </div>
                         </div>
 
                         <div class="bg-white p-4 md:p-8 rounded-[2rem] border border-gray-100 shadow-sm mt-8">
-                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-                                <h3 class="font-black text-gray-500 uppercase text-[10px] tracking-widest flex items-center gap-2">
-                                    <i class="fa-solid fa-chart-line text-blue-600 text-sm"></i> Service Performance Trend 
+                            <div
+                                class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                                <h3
+                                    class="font-black text-gray-500 uppercase text-[10px] tracking-widest flex items-center gap-2">
+                                    <i class="fa-solid fa-chart-line text-blue-600 text-sm"></i> Service Performance
+                                    Trend
                                 </h3>
                                 <div class="flex flex-wrap items-center gap-2">
                                     <div class="flex gap-1 bg-gray-50 p-1 rounded-lg border border-gray-200">
-                                        <button onclick="setChartFilter('yearly')" id="btn-yearly" class="px-3 py-1.5 bg-blue-600 text-white rounded-md text-[10px] font-bold shadow-sm transition-all">Yearly</button>
-                                        <button onclick="setChartFilter('monthly')" id="btn-monthly" class="px-3 py-1.5 text-gray-500 hover:text-blue-600 bg-transparent rounded-md text-[10px] font-bold transition-all">Monthly</button>
-                                        <button onclick="setChartFilter('weekly')" id="btn-weekly" class="px-3 py-1.5 text-gray-500 hover:text-blue-600 bg-transparent rounded-md text-[10px] font-bold transition-all">Weekly</button>
+                                        <button onclick="setChartFilter('yearly')" id="btn-yearly"
+                                            class="px-3 py-1.5 bg-blue-600 text-white rounded-md text-[10px] font-bold shadow-sm transition-all">Yearly</button>
+                                        <button onclick="setChartFilter('monthly')" id="btn-monthly"
+                                            class="px-3 py-1.5 text-gray-500 hover:text-blue-600 bg-transparent rounded-md text-[10px] font-bold transition-all">Monthly</button>
+                                        <button onclick="setChartFilter('weekly')" id="btn-weekly"
+                                            class="px-3 py-1.5 text-gray-500 hover:text-blue-600 bg-transparent rounded-md text-[10px] font-bold transition-all">Weekly</button>
                                     </div>
-                                    <select id="filter-yearly" onchange="updateChart('yearly')" class="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-[10px] font-bold text-gray-700 outline-none h-[34px]"><option>2026</option><option>2025</option></select>
-                                    <input type="month" id="filter-monthly" onchange="updateChart('monthly')" class="hidden px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-[10px] font-bold text-gray-700 outline-none h-[34px]" value="2026-02">
-                                    <input type="week" id="filter-weekly" onchange="updateChart('weekly')" class="hidden px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-[10px] font-bold text-gray-700 outline-none h-[34px]">
+                                    <select id="filter-yearly" onchange="updateChart('yearly')"
+                                        class="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-[10px] font-bold text-gray-700 outline-none h-[34px]">
+                                        <option>2026</option>
+                                        <option>2025</option>
+                                    </select>
+                                    <input type="month" id="filter-monthly" onchange="updateChart('monthly')"
+                                        class="hidden px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-[10px] font-bold text-gray-700 outline-none h-[34px]"
+                                        value="2026-02">
+                                    <input type="week" id="filter-weekly" onchange="updateChart('weekly')"
+                                        class="hidden px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-[10px] font-bold text-gray-700 outline-none h-[34px]">
                                 </div>
                             </div>
                             <div class="chart-container"><canvas id="serviceChart"></canvas></div>
@@ -222,24 +344,37 @@
                             <i class="fa-solid fa-boxes-stacked text-orange-500"></i> Sparepart Tracking
                         </h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                            <div class="bg-white p-6 rounded-[2rem] border border-b-8 border-b-orange-400 shadow-sm flex flex-col items-center justify-center text-center">
-                                <div class="bg-orange-50 p-3 rounded-full mb-3"><i class="fa-solid fa-boxes-packing text-xl text-orange-400"></i></div>
-                                <p class="text-4xl font-black text-orange-600 mb-1">24</p><p class="text-[10px] font-black text-gray-400 uppercase">Parts Borrowed</p>
+                            <div
+                                class="bg-white p-6 rounded-[2rem] border border-b-8 border-b-orange-400 shadow-sm flex flex-col items-center justify-center text-center">
+                                <div class="bg-orange-50 p-3 rounded-full mb-3"><i
+                                        class="fa-solid fa-boxes-packing text-xl text-orange-400"></i></div>
+                                <p class="text-4xl font-black text-orange-600 mb-1">24</p>
+                                <p class="text-[10px] font-black text-gray-400 uppercase">Parts Borrowed</p>
                             </div>
-                            <div class="bg-white p-6 rounded-[2rem] border border-b-8 border-b-blue-400 shadow-sm flex flex-col items-center justify-center text-center">
-                                <div class="bg-blue-50 p-3 rounded-full mb-3"><i class="fa-solid fa-rotate-left text-xl text-blue-400"></i></div>
-                                <p class="text-4xl font-black text-blue-600 mb-1">18</p><p class="text-[10px] font-black text-gray-400 uppercase">Parts Returned</p>
+                            <div
+                                class="bg-white p-6 rounded-[2rem] border border-b-8 border-b-blue-400 shadow-sm flex flex-col items-center justify-center text-center">
+                                <div class="bg-blue-50 p-3 rounded-full mb-3"><i
+                                        class="fa-solid fa-rotate-left text-xl text-blue-400"></i></div>
+                                <p class="text-4xl font-black text-blue-600 mb-1">18</p>
+                                <p class="text-[10px] font-black text-gray-400 uppercase">Parts Returned</p>
                             </div>
-                            <div class="bg-white p-6 rounded-[2rem] border border-b-8 border-b-red-400 shadow-sm flex flex-col items-center justify-center text-center">
-                                <div class="bg-red-50 p-3 rounded-full mb-3"><i class="fa-solid fa-triangle-exclamation text-xl text-red-400"></i></div>
-                                <p class="text-4xl font-black text-red-600 mb-1">6</p><p class="text-[10px] font-black text-gray-400 uppercase">Pending Return</p>
+                            <div
+                                class="bg-white p-6 rounded-[2rem] border border-b-8 border-b-red-400 shadow-sm flex flex-col items-center justify-center text-center">
+                                <div class="bg-red-50 p-3 rounded-full mb-3"><i
+                                        class="fa-solid fa-triangle-exclamation text-xl text-red-400"></i></div>
+                                <p class="text-4xl font-black text-red-600 mb-1">6</p>
+                                <p class="text-[10px] font-black text-gray-400 uppercase">Pending Return</p>
                             </div>
-                            <div class="bg-white p-6 rounded-[2rem] border border-b-8 border-b-purple-400 shadow-sm flex flex-col items-center justify-center text-center">
-                                <div class="bg-purple-50 p-3 rounded-full mb-3"><i class="fa-solid fa-hand-holding-medical text-xl text-purple-400"></i></div>
-                                <p class="text-4xl font-black text-purple-600 mb-1">56</p><p class="text-[10px] font-black text-gray-400 uppercase">Parts Used</p>
+                            <div
+                                class="bg-white p-6 rounded-[2rem] border border-b-8 border-b-purple-400 shadow-sm flex flex-col items-center justify-center text-center">
+                                <div class="bg-purple-50 p-3 rounded-full mb-3"><i
+                                        class="fa-solid fa-hand-holding-medical text-xl text-purple-400"></i></div>
+                                <p class="text-4xl font-black text-purple-600 mb-1">56</p>
+                                <p class="text-[10px] font-black text-gray-400 uppercase">Parts Used</p>
                             </div>
                         </div>
-                        <div class="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden overflow-x-auto w-full mt-6" id="parts-table-container"></div>
+                        <div class="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden overflow-x-auto w-full mt-6"
+                            id="parts-table-container"></div>
                     </div>
 
                     <div id="home-milestone" class="hidden space-y-6">
@@ -247,23 +382,29 @@
                             <i class="fa-solid fa-map-location-dot text-blue-600"></i> Installation Milestone Map
                         </h3>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="bg-white p-5 rounded-2xl border border-b-4 border-b-blue-600 shadow-sm flex flex-col items-center justify-center text-center">
+                            <div
+                                class="bg-white p-5 rounded-2xl border border-b-4 border-b-blue-600 shadow-sm flex flex-col items-center justify-center text-center">
                                 <p class="text-[10px] font-black text-blue-600 uppercase mb-0.5">REGION WIB</p>
-                                <p class="text-[9px] font-bold text-gray-400 mb-2 h-6 px-2">Sumatera, Jawa, Kalbar, Kalteng</p>
+                                <p class="text-[9px] font-bold text-gray-400 mb-2 h-6 px-2">Sumatera, Jawa, Kalbar,
+                                    Kalteng</p>
                                 <p class="text-4xl font-black text-amber-500 drop-shadow-sm">142</p>
                             </div>
-                            <div class="bg-white p-5 rounded-2xl border border-b-4 border-b-orange-500 shadow-sm flex flex-col items-center justify-center text-center">
+                            <div
+                                class="bg-white p-5 rounded-2xl border border-b-4 border-b-orange-500 shadow-sm flex flex-col items-center justify-center text-center">
                                 <p class="text-[10px] font-black text-orange-600 uppercase mb-0.5">REGION WITA</p>
-                                <p class="text-[9px] font-bold text-gray-400 mb-2 h-6 px-2">Kaltim, Kalsel, Kalut, Sulawesi, Bali, NTB, NTT</p>
+                                <p class="text-[9px] font-bold text-gray-400 mb-2 h-6 px-2">Kaltim, Kalsel, Kalut,
+                                    Sulawesi, Bali, NTB, NTT</p>
                                 <p class="text-4xl font-black text-amber-500 drop-shadow-sm">86</p>
                             </div>
-                            <div class="bg-white p-5 rounded-2xl border border-b-4 border-b-red-600 shadow-sm flex flex-col items-center justify-center text-center">
+                            <div
+                                class="bg-white p-5 rounded-2xl border border-b-4 border-b-red-600 shadow-sm flex flex-col items-center justify-center text-center">
                                 <p class="text-[10px] font-black text-red-600 uppercase mb-0.5">REGION WIT</p>
                                 <p class="text-[9px] font-bold text-gray-400 mb-2 h-6 px-2">Maluku, Papua</p>
                                 <p class="text-4xl font-black text-amber-500 drop-shadow-sm">34</p>
                             </div>
                         </div>
-                        <div class="bg-white w-full h-[500px] rounded-[2rem] border border-gray-100 shadow-sm p-2 relative z-0">
+                        <div
+                            class="bg-white w-full h-[500px] rounded-[2rem] border border-gray-100 shadow-sm p-2 relative z-0">
                             <div id="leaflet-map"></div>
                         </div>
                     </div>
@@ -272,26 +413,363 @@
                         <h3 class="font-black text-gray-700 uppercase text-sm tracking-widest flex items-center gap-2">
                             <i class="fa-solid fa-clock-rotate-left text-gray-500"></i> System Activity Logs
                         </h3>
-                        <div class="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden p-6 space-y-4">
-                            <div class="border-b border-gray-50 pb-3"><p class="text-[10px] font-bold text-gray-400">13 Mar 2026 - 10:45 WIB</p><p class="text-xs font-bold"><span class="text-blue-600 uppercase">Ahmad Teknisi</span> mengupdate status request #REQ-921 menjadi <span class="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded text-[10px]">WIP</span></p></div>
-                            <div class="border-b border-gray-50 pb-3"><p class="text-[10px] font-bold text-gray-400">13 Mar 2026 - 09:12 WIB</p><p class="text-xs font-bold"><span class="text-purple-600 uppercase">Sistem</span> mendaftarkan Instalasi Baru untuk <b>RSUD Medika Bakti</b> (PICO-2026-001).</p></div>
-                            <div class="pb-3"><p class="text-[10px] font-bold text-gray-400">12 Mar 2026 - 16:30 WIB</p><p class="text-xs font-bold"><span class="text-blue-600 uppercase">Budi Santoso</span> menambahkan sparepart <span class="text-red-600">Power Supply Unit</span> ke daftar Pending Return.</p></div>
+                        <div
+                            class="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden p-6 space-y-4">
+                            <div class="border-b border-gray-50 pb-3">
+                                <p class="text-[10px] font-bold text-gray-400">13 Mar 2026 - 10:45 WIB</p>
+                                <p class="text-xs font-bold"><span class="text-blue-600 uppercase">Ahmad Teknisi</span>
+                                    mengupdate status request #REQ-921 menjadi <span
+                                        class="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded text-[10px]">WIP</span>
+                                </p>
+                            </div>
+                            <div class="border-b border-gray-50 pb-3">
+                                <p class="text-[10px] font-bold text-gray-400">13 Mar 2026 - 09:12 WIB</p>
+                                <p class="text-xs font-bold"><span class="text-purple-600 uppercase">Sistem</span>
+                                    mendaftarkan Instalasi Baru untuk <b>RSUD Medika Bakti</b> (PICO-2026-001).</p>
+                            </div>
+                            <div class="pb-3">
+                                <p class="text-[10px] font-bold text-gray-400">12 Mar 2026 - 16:30 WIB</p>
+                                <p class="text-xs font-bold"><span class="text-blue-600 uppercase">Budi Santoso</span>
+                                    menambahkan sparepart <span class="text-red-600">Power Supply Unit</span> ke daftar
+                                    Pending Return.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div id="wrapper-database" class="hidden">
                     <div id="db-customer-list" class="hidden space-y-6">
-                        <h3 class="font-black text-gray-700 uppercase text-sm tracking-widest"><i class="fa-solid fa-hospital text-blue-600"></i> Customer Data List</h3>
-                        <div class="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-10 text-center"><p class="text-gray-400 font-bold">Data tabel pelanggan...</p></div>
+                        <div
+                            class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-100 pb-4">
+                            <div>
+                                <h3
+                                    class="font-black text-gray-700 uppercase text-sm tracking-widest flex items-center gap-2">
+                                    <i class="fa-solid fa-hospital text-blue-600"></i> Customer Data Master
+                                </h3>
+                                <p class="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-wide">Manage
+                                    Headquarters & Legal Entities</p>
+                            </div>
+                            <button onclick="document.getElementById('modal-new-customer').classList.remove('hidden')"
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-md transition-all flex items-center gap-2 active:scale-95">
+                                <i class="fa-solid fa-plus"></i> New Data
+                            </button>
+                        </div>
+
+                        <div class="space-y-3">
+                            <h4
+                                class="text-[10px] font-black text-orange-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                                <i class="fa-solid fa-spinner fa-spin"></i> In-Progress & Pending Approval
+                            </h4>
+                            <div
+                                class="bg-white rounded-[2rem] border border-orange-100 shadow-sm overflow-hidden overflow-x-auto w-full">
+                                <table class="w-full text-left min-w-[700px]">
+                                    <thead class="bg-orange-50 border-b border-orange-100">
+                                        <tr class="text-[10px] font-black text-orange-400 uppercase tracking-widest">
+                                            <th class="px-6 py-4">Customer Name (HQ)</th>
+                                            <th class="px-6 py-4">Input By</th>
+                                            <th class="px-6 py-4">Last Update</th>
+                                            <th class="px-6 py-4">Status</th>
+                                            <th class="px-6 py-4 text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b border-gray-50 hover:bg-orange-50/50 transition-colors">
+                                            <td class="px-6 py-4 text-xs font-black text-gray-700">PT. MAJU MUNDUR
+                                                SEJAHTERA</td>
+                                            <td class="px-6 py-4 text-xs font-bold text-gray-500">Budi (Admin)</td>
+                                            <td class="px-6 py-4 text-[10px] font-bold text-gray-400">13 Mar, 10:30</td>
+                                            <td class="px-6 py-4">
+                                                <span
+                                                    class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest">Draft</span>
+                                            </td>
+                                            <td class="px-6 py-4 text-center">
+                                                <button
+                                                    class="text-[10px] font-black text-blue-600 hover:text-blue-800 uppercase tracking-wider underline">Edit
+                                                    Data</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-b border-gray-50 hover:bg-orange-50/50 transition-colors">
+                                            <td class="px-6 py-4 text-xs font-black text-gray-700">CV. TEKNOLOGI ABADI
+                                            </td>
+                                            <td class="px-6 py-4 text-xs font-bold text-gray-500">Siti (Admin)</td>
+                                            <td class="px-6 py-4 text-[10px] font-bold text-gray-400">12 Mar, 08:15</td>
+                                            <td class="px-6 py-4">
+                                                <span
+                                                    class="bg-orange-100 text-orange-600 px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest animate-pulse border border-orange-200">Waiting
+                                                    ACC</span>
+                                            </td>
+                                            <td class="px-6 py-4 text-center">
+                                                <button
+                                                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest shadow-sm transition-all">Review</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 mt-8">
+                            <h4
+                                class="text-[10px] font-black text-green-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                                <i class="fa-solid fa-database"></i> Verified Master Database
+                            </h4>
+                            <div
+                                class="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden overflow-x-auto w-full">
+                                <table class="w-full text-left min-w-[700px]">
+                                    <thead class="bg-gray-50 border-b border-gray-100">
+                                        <tr class="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                            <th class="px-6 py-4">Company Name</th>
+                                            <th class="px-6 py-4">HQ Address</th>
+                                            <th class="px-6 py-4 text-center">Type</th>
+                                            <th class="px-6 py-4 text-center">Sites</th>
+                                            <th class="px-6 py-4 text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            class="border-b border-gray-50 hover:bg-gray-50 transition-colors cursor-pointer">
+                                            <td class="px-6 py-4 text-sm font-black text-gray-800">PT. INDOFOOD SUKSES
+                                                MAKMUR</td>
+                                            <td class="px-6 py-4 text-xs font-bold text-gray-500">Sudirman Plaza,
+                                                Jakarta Pusat</td>
+                                            <td class="px-6 py-4 text-center">
+                                                <span
+                                                    class="border border-purple-400 text-purple-600 bg-purple-50 px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest">VIP</span>
+                                            </td>
+                                            <td class="px-6 py-4 text-center text-sm font-black text-blue-600">12</td>
+                                            <td class="px-6 py-4 text-center">
+                                                <button
+                                                    class="w-8 h-8 rounded-full bg-gray-100 hover:bg-blue-100 text-gray-500 hover:text-blue-600 transition-colors flex items-center justify-center mx-auto"><i
+                                                        class="fa-solid fa-chevron-right text-xs"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="modal-new-customer"
+                        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[99999] hidden flex justify-center p-4 overflow-y-auto transition-opacity">
+                        <div
+                            class="bg-white w-full max-w-3xl rounded-[2.5rem] shadow-2xl relative my-auto border border-gray-100 animate-[fadeIn_0.2s_ease-out]">
+                            <div
+                                class="bg-gray-50 rounded-t-[2.5rem] px-8 py-6 border-b border-gray-100 flex justify-between items-center sticky top-0 z-10">
+                                <div>
+                                    <h3 class="text-sm font-black text-gray-800 uppercase tracking-widest">Registrasi
+                                        Master Customer</h3>
+                                    <p class="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-wide">Formulir
+                                        Data Legal (HQ)</p>
+                                </div>
+                                <button onclick="document.getElementById('modal-new-customer').classList.add('hidden')"
+                                    class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 shadow-sm transition-all border border-gray-100">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+
+                            <div class="p-8 max-h-[60vh] overflow-y-auto space-y-8 no-scrollbar">
+                                <div class="space-y-4">
+                                    <h4
+                                        class="text-[10px] font-black text-blue-600 uppercase tracking-widest border-b border-gray-100 pb-2 flex items-center gap-2">
+                                        <i class="fa-solid fa-building"></i> Identitas Perusahaan
+                                    </h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                        <div class="md:col-span-2">
+                                            <label
+                                                class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">Nama
+                                                Perusahaan (HQ) <span class="text-red-500">*</span></label>
+                                            <input type="text"
+                                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-blue-600 focus:bg-white text-xs font-bold transition-all"
+                                                placeholder="Contoh: PT. ABC Indonesia">
+                                        </div>
+
+                                            <div class="md:col-span-2 space-y-4" id="address-container">
+                                            <div
+                                                class="bg-gray-50/50 p-5 rounded-[2rem] border border-gray-100 address-block">
+                                                <h5
+                                                    class="text-[10px] font-black text-gray-700 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                                    <i class="fa-solid fa-map-location-dot text-blue-500"></i> Alamat
+                                                    Pusat <span class="text-red-500">*</span>
+                                                </h5>
+
+                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div class="md:col-span-2">
+                                                        <label
+                                                            class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">Detail
+                                                            Alamat <span class="text-red-500">*</span></label>
+                                                        <textarea required
+                                                            class="w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl outline-none focus:border-blue-600 text-xs font-bold transition-all shadow-sm"
+                                                            rows="2"
+                                                            placeholder="Contoh: Jl. Sudirman Kav 1..."></textarea>
+                                                    </div>
+                                                    <div>
+                                                        <label
+                                                            class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">Provinsi
+                                                            <span class="text-red-500">*</span></label>
+                                                        <select required
+                                                            class="prov-select w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl outline-none focus:border-blue-600 text-xs font-bold transition-all shadow-sm cursor-pointer"
+                                                            onchange="loadCities(this)">
+                                                            <option value="" disabled selected>Memuat Provinsi...
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label
+                                                            class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">Kota
+                                                            / Kabupaten <span class="text-red-500">*</span></label>
+                                                        <select required
+                                                            class="city-select w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl outline-none focus:border-blue-600 text-xs font-bold transition-all shadow-sm cursor-pointer"
+                                                            onchange="loadDistricts(this)">
+                                                            <option value="" disabled selected>Pilih Provinsi Dulu
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label
+                                                            class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">Kecamatan
+                                                            <span class="text-red-500">*</span></label>
+                                                        <select required
+                                                            class="dist-select w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl outline-none focus:border-blue-600 text-xs font-bold transition-all shadow-sm cursor-pointer"
+                                                            onchange="loadVillages(this)">
+                                                            <option value="" disabled selected>Pilih Kota Dulu</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label
+                                                            class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">Kelurahan
+                                                            / Desa <span class="text-red-500">*</span></label>
+                                                        <select required
+                                                            class="vill-select w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl outline-none focus:border-blue-600 text-xs font-bold transition-all shadow-sm cursor-pointer">
+                                                            <option value="" disabled selected>Pilih Kecamatan Dulu
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="md:col-span-2">
+                                                        <label
+                                                            class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">Kode
+                                                            Pos <span class="text-red-500">*</span></label>
+                                                        <input required type="number"
+                                                            class="w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl outline-none focus:border-blue-600 text-xs font-bold transition-all shadow-sm"
+                                                            placeholder="12345">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="md:col-span-2 mt-[-10px]">
+                                            <button onclick="addAddressField()"
+                                                class="text-[10px] font-black text-blue-600 hover:text-blue-800 uppercase tracking-widest flex items-center gap-1.5 transition-colors w-max">
+                                                <i class="fa-solid fa-plus-circle"></i> Tambah Alamat Cabang / Site
+                                            </button>
+                                        </div>
+
+                                        <div>
+                                            <label
+                                                class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">Telepon
+                                                Kantor</label>
+                                            <input type="text"
+                                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-blue-600 focus:bg-white text-xs font-bold transition-all">
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">NPWP
+                                                / NIK</label>
+                                            <input type="text"
+                                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-blue-600 focus:bg-white text-xs font-bold transition-all">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-4">
+                                    <h4
+                                        class="text-[10px] font-black text-blue-600 uppercase tracking-widest border-b border-gray-100 pb-2 flex items-center gap-2">
+                                        <i class="fa-solid fa-address-card"></i> Personal in Charge
+                                    </h4>
+
+                                    <div id="pic-container" class="space-y-4">
+                                        <div class="bg-gray-50/50 p-5 rounded-[2rem] border border-gray-100 space-y-4">
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                                <div>
+                                                    <label
+                                                        class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">Nama
+                                                        PIC <span class="text-red-500">*</span></label>
+                                                    <input type="text"
+                                                        class="w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl outline-none focus:border-blue-600 text-xs font-bold transition-all">
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">Jabatan
+                                                        <span class="text-red-500">*</span></label>
+                                                    <select
+                                                        class="w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl outline-none focus:border-blue-600 text-xs font-bold text-gray-700 transition-all cursor-pointer">
+                                                        <option value="" disabled selected>Pilih Jabatan...</option>
+                                                        <option value="Owner">Owner / Pemilik</option>
+                                                        <option value="Director">Direktur</option>
+                                                        <option value="Manager">Manager</option>
+                                                        <option value="Supervisor">Supervisor</option>
+                                                        <option value="Staff">Staff / Admin</option>
+                                                        <option value="Lainnya">Lainnya</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">No.
+                                                        Telepon / WA <span class="text-red-500">*</span></label>
+                                                    <input type="text"
+                                                        class="w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl outline-none focus:border-blue-600 text-xs font-bold transition-all"
+                                                        placeholder="0812...">
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">Email</label>
+                                                    <input type="email"
+                                                        class="w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl outline-none focus:border-blue-600 text-xs font-bold transition-all"
+                                                        placeholder="email@domain.com">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button onclick="addPicField()"
+                                        class="text-[10px] font-black text-blue-600 hover:text-blue-800 uppercase tracking-widest flex items-center gap-1.5 mt-2 transition-colors w-max">
+                                        <i class="fa-solid fa-user-plus"></i> Tambah PIC Selanjutnya
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div
+                                class="bg-gray-50 rounded-b-[2.5rem] px-8 py-6 border-t border-gray-100 flex justify-end items-center gap-3">
+                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mr-auto"><i
+                                        class="fa-solid fa-circle-info text-blue-400"></i> * Wajib Diisi</span>
+
+                                <button onclick="document.getElementById('modal-new-customer').classList.add('hidden')"
+                                    class="px-4 py-3 text-[11px] font-black text-gray-500 hover:text-gray-800 uppercase tracking-widest transition-colors">
+                                    Batal
+                                </button>
+
+                                <button
+                                    class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-600 px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-sm transition-all active:scale-95 flex items-center gap-2">
+                                    <i class="fa-solid fa-floppy-disk"></i> Simpan Draft
+                                </button>
+
+                                <button
+                                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-lg transition-all active:scale-95 flex items-center gap-2">
+                                    <i class="fa-solid fa-paper-plane"></i> Minta Approval
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     <div id="db-installation-list" class="hidden space-y-6">
-                         <h3 class="font-black text-gray-700 uppercase text-sm tracking-widest"><i class="fa-solid fa-database text-blue-600"></i> Installation Database</h3>
-                         <div class="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-10 text-center"><p class="text-gray-400 font-bold">Data histori instalasi...</p></div>
+                        <h3 class="font-black text-gray-700 uppercase text-sm tracking-widest"><i
+                                class="fa-solid fa-database text-blue-600"></i> Installation Database</h3>
+                        <div class="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-10 text-center">
+                            <p class="text-gray-400 font-bold">Data histori instalasi...</p>
+                        </div>
                     </div>
                 </div>
                 <div id="wrapper-service" class="hidden">
-                    <div class="flex flex-col items-center justify-center py-20 bg-white rounded-[2rem] border border-dashed border-gray-300">
+                    <div
+                        class="flex flex-col items-center justify-center py-20 bg-white rounded-[2rem] border border-dashed border-gray-300">
                         <i class="fa-solid fa-person-digging text-4xl text-gray-300 mb-4"></i>
                         <p class="text-sm font-bold text-gray-400 uppercase tracking-widest">Halaman Service (TBD)</p>
                     </div>
@@ -301,23 +779,31 @@
     </section>
 
     <div class="bottom-nav-fix md:hidden px-4">
-        <button onclick="switchMainTab('HOME')" class="flex flex-col items-center justify-center gap-1 text-blue-600 active:scale-90 transition-transform w-1/3">
+        <button onclick="switchMainTab('HOME')"
+            class="flex flex-col items-center justify-center gap-1 text-blue-600 active:scale-90 transition-transform w-1/3">
             <i class="fas fa-home text-xl"></i><span class="text-[9px] font-bold uppercase">HOME</span>
         </button>
-        <button onclick="openMenuSheet()" class="flex flex-col items-center justify-center gap-1 active:scale-90 transition-transform w-1/3 text-gray-600 hover:text-blue-600">
-            <div class="bg-gray-100 w-12 h-12 rounded-full flex items-center justify-center mb-0.5 border border-gray-200 shadow-sm">
+        <button onclick="openMenuSheet()"
+            class="flex flex-col items-center justify-center gap-1 active:scale-90 transition-transform w-1/3 text-gray-600 hover:text-blue-600">
+            <div
+                class="bg-gray-100 w-12 h-12 rounded-full flex items-center justify-center mb-0.5 border border-gray-200 shadow-sm">
                 <i class="fas fa-layer-group text-lg"></i>
             </div>
             <span class="text-[9px] font-black uppercase">MENU</span>
         </button>
-        <button onclick="switchMainTab('SERVICE')" class="flex flex-col items-center justify-center gap-1 text-gray-400 active:scale-90 transition-transform w-1/3">
+        <button onclick="switchMainTab('SERVICE')"
+            class="flex flex-col items-center justify-center gap-1 text-gray-400 active:scale-90 transition-transform w-1/3">
             <i class="fas fa-screwdriver-wrench text-xl"></i><span class="text-[9px] font-bold uppercase">SERVICE</span>
         </button>
     </div>
 
-    <div id="menu-overlay" onclick="closeBottomSheet()" class="fixed inset-0 bg-black/40 z-[9990] hidden backdrop-blur-sm transition-opacity"></div>
-    <div id="bottom-sheet" class="fixed bottom-0 left-0 right-0 bg-white z-[9999] rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] transform translate-y-full transition-transform duration-300 ease-out md:hidden flex flex-col max-h-[85vh]">
-        <div class="flex justify-center pt-5 pb-2 shrink-0"><div class="w-12 h-1.5 bg-gray-200 rounded-full"></div></div>
+    <div id="menu-overlay" onclick="closeBottomSheet()"
+        class="fixed inset-0 bg-black/40 z-[9990] hidden backdrop-blur-sm transition-opacity"></div>
+    <div id="bottom-sheet"
+        class="fixed bottom-0 left-0 right-0 bg-white z-[9999] rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] transform translate-y-full transition-transform duration-300 ease-out md:hidden flex flex-col max-h-[85vh]">
+        <div class="flex justify-center pt-5 pb-2 shrink-0">
+            <div class="w-12 h-1.5 bg-gray-200 rounded-full"></div>
+        </div>
         <div class="px-8 py-4 border-b border-gray-50 text-center shrink-0">
             <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Pilih Menu Layar</h4>
         </div>
@@ -326,9 +812,9 @@
 
     <script>
         let chartInstance = null;
-        let mapInstance = null; 
-        let activeMainTab = 'HOME'; 
-        let currentUserRole = 'Administrator'; 
+        let mapInstance = null;
+        let activeMainTab = 'HOME';
+        let currentUserRole = 'Administrator';
 
         const dummyPartsLog = [
             { part: 'Motherboard X-Ray V2', cust: 'RSUD Medika Bakti', status: 'Pending Return', tech: 'Ahmad' },
@@ -337,16 +823,20 @@
         ];
 
         const allMenuGroups = [
-            { groupName: 'Dashboard & Tracker', items: [
-                { id: 'service-dashboard', label: 'Dashboard', icon: 'fa-gauge-high', color: 'text-blue-500', tab: 'HOME' },
-                { id: 'parts-tracking', label: 'Spareparts', icon: 'fa-boxes-stacked', color: 'text-orange-500', tab: 'HOME' },
-                { id: 'milestone', label: 'Milestone Map', icon: 'fa-map-location-dot', color: 'text-blue-500', tab: 'HOME' },
-                { id: 'activity-logs', label: 'Activity Logs', icon: 'fa-clock-rotate-left', color: 'text-gray-500', tab: 'HOME', reqManager: true }
-            ]},
-            { groupName: 'Data & Instalasi', items: [
-                { id: 'customer-list', label: 'Customer Data', icon: 'fa-hospital', color: 'text-purple-500', tab: 'DATABASE' },
-                { id: 'installation-list', label: 'Installation DB', icon: 'fa-database', color: 'text-purple-500', tab: 'DATABASE' }
-            ]}
+            {
+                groupName: 'Dashboard & Tracker', items: [
+                    { id: 'service-dashboard', label: 'Dashboard', icon: 'fa-gauge-high', color: 'text-blue-500', tab: 'HOME' },
+                    { id: 'parts-tracking', label: 'Spareparts', icon: 'fa-boxes-stacked', color: 'text-orange-500', tab: 'HOME' },
+                    { id: 'milestone', label: 'Milestone Map', icon: 'fa-map-location-dot', color: 'text-blue-500', tab: 'HOME' },
+                    { id: 'activity-logs', label: 'Activity Logs', icon: 'fa-clock-rotate-left', color: 'text-gray-500', tab: 'HOME', reqManager: true }
+                ]
+            },
+            {
+                groupName: 'Data & Instalasi', items: [
+                    { id: 'customer-list', label: 'Customer Data', icon: 'fa-hospital', color: 'text-purple-500', tab: 'DATABASE' },
+                    { id: 'installation-list', label: 'Installation DB', icon: 'fa-database', color: 'text-purple-500', tab: 'DATABASE' }
+                ]
+            }
         ];
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -374,16 +864,16 @@
             else { i.type = 'password'; ic.classList.replace('fa-eye-slash', 'fa-eye'); }
         }
 
-        function showLoginPage() { 
-            document.getElementById('login-page').classList.remove('hidden'); 
-            document.getElementById('dashboard-page').classList.add('hidden'); 
+        function showLoginPage() {
+            document.getElementById('login-page').classList.remove('hidden');
+            document.getElementById('dashboard-page').classList.add('hidden');
         }
 
         function showDashboard() {
-            document.getElementById('login-page').classList.add('hidden'); 
+            document.getElementById('login-page').classList.add('hidden');
             document.getElementById('dashboard-page').classList.remove('hidden');
             document.getElementById('user-role-desktop').innerText = currentUserRole; document.getElementById('user-role-mobile').innerText = currentUserRole;
-            applyRolePermissions(); renderDummyData(); switchMainTab('HOME'); 
+            applyRolePermissions(); renderDummyData(); switchMainTab('HOME');
         }
 
         function applyRolePermissions() {
@@ -404,35 +894,35 @@
             activeBtn.classList.remove('text-gray-500', 'bg-transparent');
             activeBtn.classList.add('bg-blue-600', 'text-white');
             document.getElementById('filter-' + type).classList.remove('hidden');
-            
+
             updateChart(type);
         }
 
-        function updateChart(filterType = 'yearly') { 
+        function updateChart(filterType = 'yearly') {
             const ctx = document.getElementById('serviceChart');
-            if(!ctx) return;
-            if(chartInstance) chartInstance.destroy();
-            
+            if (!ctx) return;
+            if (chartInstance) chartInstance.destroy();
+
             let labels = []; let data = [];
-            
+
             if (filterType === 'yearly') {
                 labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
                 data = [12, 19, 8, 15, 42, 3, 20, 15, 25, 30, 10, 5];
             } else if (filterType === 'monthly') {
-                const monthInput = document.getElementById('filter-monthly').value; 
+                const monthInput = document.getElementById('filter-monthly').value;
                 let year = 2026;
-                let month = 2; 
-                
+                let month = 2;
+
                 if (monthInput) {
                     const parts = monthInput.split('-');
                     year = parseInt(parts[0]);
                     month = parseInt(parts[1]);
                 }
-                
+
                 const daysInMonth = new Date(year, month, 0).getDate();
-                
-                labels = Array.from({length: daysInMonth}, (_, i) => i + 1); 
-                data = Array.from({length: daysInMonth}, () => Math.floor(Math.random() * 8)); 
+
+                labels = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+                data = Array.from({ length: daysInMonth }, () => Math.floor(Math.random() * 8));
             } else if (filterType === 'weekly') {
                 labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
                 data = [5, 2, 8, 1, 6, 9, 3];
@@ -459,7 +949,7 @@
             document.getElementById('wrapper-home').classList.toggle('hidden', tab !== 'HOME');
             document.getElementById('wrapper-database').classList.toggle('hidden', tab !== 'DATABASE');
             document.getElementById('wrapper-service').classList.toggle('hidden', tab !== 'SERVICE');
-            
+
             document.getElementById('side-menu-home').classList.toggle('hidden', tab !== 'HOME');
             document.getElementById('side-menu-database').classList.toggle('hidden', tab !== 'DATABASE');
             document.getElementById('side-menu-service').classList.toggle('hidden', tab !== 'SERVICE');
@@ -476,12 +966,12 @@
             document.getElementById('home-' + section)?.classList.remove('hidden');
 
             const sideIds = { 'service-dashboard': 'side-service', 'parts-tracking': 'side-parts', 'milestone': 'side-milestone', 'activity-logs': 'side-logs' };
-            Object.values(sideIds).forEach(id => { const el = document.getElementById(id); if(el) { el.classList.remove('sidebar-active'); el.classList.add('text-gray-500'); } });
+            Object.values(sideIds).forEach(id => { const el = document.getElementById(id); if (el) { el.classList.remove('sidebar-active'); el.classList.add('text-gray-500'); } });
             const activeSide = document.getElementById(sideIds[section]);
-            if(activeSide) { activeSide.classList.add('sidebar-active'); activeSide.classList.remove('text-gray-500'); }
+            if (activeSide) { activeSide.classList.add('sidebar-active'); activeSide.classList.remove('text-gray-500'); }
 
             if (section === 'service-dashboard') setTimeout(() => setChartFilter('yearly'), 100);
-            if (section === 'milestone') setTimeout(initMap, 200); 
+            if (section === 'milestone') setTimeout(initMap, 200);
         }
 
         function switchDbSection(section) {
@@ -492,8 +982,8 @@
         }
 
         function initMap() {
-            if(!mapInstance) {
-                const bounds = [ [-11.0, 94.0], [6.0, 141.0] ];
+            if (!mapInstance) {
+                const bounds = [[-11.0, 94.0], [6.0, 141.0]];
                 mapInstance = L.map('leaflet-map', { maxBounds: bounds, maxBoundsViscosity: 1.0, minZoom: 5, maxZoom: 18 }).setView([-2.5489, 118.0149], 5);
                 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap' }).addTo(mapInstance);
                 L.marker([-6.2088, 106.8456]).addTo(mapInstance).bindPopup('<b class="text-xs">RSUD Jakarta Pusat</b><br/>Status: Aktif');
@@ -503,7 +993,7 @@
 
         function renderDummyData() {
             const pBox = document.getElementById('parts-table-container');
-            if(pBox) {
+            if (pBox) {
                 pBox.innerHTML = `
                     <table class="w-full text-left min-w-[600px]">
                         <thead class="bg-gray-50 border-b"><tr class="text-[10px] font-black text-gray-400 uppercase tracking-widest">
@@ -513,7 +1003,7 @@
                             <tr class="border-b border-gray-50 hover:bg-gray-50">
                                 <td class="px-6 py-4 text-xs font-black text-gray-700">${p.part}</td>
                                 <td class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">${p.cust}</td>
-                                <td class="px-6 py-4 text-[10px] font-black uppercase"><span class="px-2 py-1 rounded-md ${p.status==='Pending Return' ? 'bg-red-50 text-red-600' : (p.status==='Borrowed' ? 'bg-orange-50 text-orange-600' : 'bg-purple-50 text-purple-600')}">${p.status}</span></td>
+                                <td class="px-6 py-4 text-[10px] font-black uppercase"><span class="px-2 py-1 rounded-md ${p.status === 'Pending Return' ? 'bg-red-50 text-red-600' : (p.status === 'Borrowed' ? 'bg-orange-50 text-orange-600' : 'bg-purple-50 text-purple-600')}">${p.status}</span></td>
                                 <td class="px-6 py-4 text-xs font-bold text-gray-400">${p.tech}</td>
                             </tr>`).join('')}
                         </tbody>
@@ -521,7 +1011,7 @@
             }
         }
 
-        function openMenuSheet() { 
+        function openMenuSheet() {
             const overlay = document.getElementById('menu-overlay'); const sheet = document.getElementById('bottom-sheet'); const content = document.getElementById('sheet-content');
             content.innerHTML = '';
             allMenuGroups.forEach(group => {
@@ -531,13 +1021,194 @@
                     if (item.reqManager && currentUserRole !== 'Administrator' && currentUserRole !== 'Manager') return;
                     const btn = document.createElement('button'); btn.className = "flex flex-col items-center gap-3 p-4 bg-gray-50 rounded-2xl border border-gray-100 active:scale-95 transition-all";
                     btn.innerHTML = `<div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-base ${item.color}"><i class="fa-solid ${item.icon}"></i></div><span class="text-[9px] font-black text-gray-700 uppercase tracking-wide text-center">${item.label}</span>`;
-                    btn.onclick = () => { closeBottomSheet(); setTimeout(() => { switchMainTab(item.tab); if(item.tab === 'HOME') switchHomeSection(item.id); else switchDbSection(item.id); }, 200); };
+                    btn.onclick = () => { closeBottomSheet(); setTimeout(() => { switchMainTab(item.tab); if (item.tab === 'HOME') switchHomeSection(item.id); else switchDbSection(item.id); }, 200); };
                     grid.appendChild(btn);
                 }); content.appendChild(grid);
             });
             overlay.classList.remove('hidden'); setTimeout(() => sheet.classList.remove('translate-y-full'), 10);
         }
         function closeBottomSheet() { document.getElementById('bottom-sheet')?.classList.add('translate-y-full'); setTimeout(() => document.getElementById('menu-overlay')?.classList.add('hidden'), 300); }
+
+        // Fungsi Tambah Alamat Dinamis (Update Format Lengkap)
+        const API_WILAYAH = 'https://www.emsifa.com/api-wilayah-indonesia/api';
+
+        async function loadProvinces(selectElement) {
+            selectElement.innerHTML = '<option value="" disabled selected>Memuat Data...</option>';
+            try {
+                const response = await fetch(`${API_WILAYAH}/provinces.json`);
+                const data = await response.json();
+
+                let options = '<option value="" disabled selected>Pilih Provinsi...</option>';
+                data.forEach(prov => { options += `<option value="${prov.id}">${prov.name}</option>`; });
+                selectElement.innerHTML = options;
+
+            } catch (error) {
+                selectElement.innerHTML = '<option value="" disabled selected>Gagal memuat API</option>';
+            }
+        }
+
+        async function loadCities(provElement) {
+            const block = provElement.closest('.address-block');
+            const citySelect = block.querySelector('.city-select');
+            const distSelect = block.querySelector('.dist-select');
+            const villSelect = block.querySelector('.vill-select');
+
+            citySelect.innerHTML = '<option value="" disabled selected>Memuat Kota...</option>';
+            distSelect.innerHTML = '<option value="" disabled selected>Pilih Kota Dulu</option>';
+            villSelect.innerHTML = '<option value="" disabled selected>Pilih Kecamatan Dulu</option>';
+
+            try {
+                const response = await fetch(`${API_WILAYAH}/regencies/${provElement.value}.json`);
+                const data = await response.json();
+
+                let options = '<option value="" disabled selected>Pilih Kota/Kabupaten...</option>';
+                data.forEach(city => { options += `<option value="${city.id}">${city.name}</option>`; });
+                citySelect.innerHTML = options;
+
+            } catch (error) {
+                citySelect.innerHTML = '<option value="" disabled selected>Gagal memuat API</option>';
+            }
+        }
+
+        async function loadDistricts(cityElement) {
+            const block = cityElement.closest('.address-block');
+            const distSelect = block.querySelector('.dist-select');
+            const villSelect = block.querySelector('.vill-select');
+
+            distSelect.innerHTML = '<option value="" disabled selected>Memuat Kecamatan...</option>';
+            villSelect.innerHTML = '<option value="" disabled selected>Pilih Kecamatan Dulu</option>';
+
+            try {
+                const response = await fetch(`${API_WILAYAH}/districts/${cityElement.value}.json`);
+                const data = await response.json();
+
+                let options = '<option value="" disabled selected>Pilih Kecamatan...</option>';
+                data.forEach(dist => { options += `<option value="${dist.id}">${dist.name}</option>`; });
+                distSelect.innerHTML = options;
+
+            } catch (error) {
+                distSelect.innerHTML = '<option value="" disabled selected>Gagal memuat API</option>';
+            }
+        }
+
+        async function loadVillages(distElement) {
+            const block = distElement.closest('.address-block');
+            const villSelect = block.querySelector('.vill-select');
+
+            villSelect.innerHTML = '<option value="" disabled selected>Memuat Kelurahan...</option>';
+
+            try {
+                const response = await fetch(`${API_WILAYAH}/villages/${distElement.value}.json`);
+                const data = await response.json();
+
+                let options = '<option value="" disabled selected>Pilih Kelurahan...</option>';
+                data.forEach(vill => { options += `<option value="${vill.id}">${vill.name}</option>`; });
+                villSelect.innerHTML = options;
+
+            } catch (error) {
+                villSelect.innerHTML = '<option value="" disabled selected>Gagal memuat API</option>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const initialProvSelect = document.querySelector('#address-container .prov-select');
+            if (initialProvSelect) loadProvinces(initialProvSelect);
+        });
+
+        function addAddressField() {
+            const container = document.getElementById('address-container');
+            const newDiv = document.createElement('div');
+            newDiv.className = "bg-gray-50/50 p-5 rounded-[2rem] border border-gray-100 relative animate-[fadeIn_0.2s_ease-out] mt-4 address-block";
+            newDiv.innerHTML = `
+        <div class="flex justify-between items-center mb-4">
+            <h5 class="text-[10px] font-black text-gray-700 uppercase tracking-widest flex items-center gap-2">
+                <i class="fa-solid fa-map-pin text-blue-500"></i> Alamat Cabang
+            </h5>
+            <button onclick="this.parentElement.parentElement.remove()" class="text-[9px] font-black text-red-500 hover:text-red-700 uppercase tracking-widest flex items-center gap-1 bg-red-50 px-3 py-1.5 rounded-xl transition-colors">
+                <i class="fa-solid fa-trash"></i> Hapus
+            </button>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="md:col-span-2">
+                <label class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">Detail Alamat <span class="text-red-500">*</span></label>
+                <textarea required class="w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl outline-none focus:border-blue-600 text-xs font-bold transition-all shadow-sm" rows="2" placeholder="Detail jalan..."></textarea>
+            </div>
+            <div>
+                <label class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">Provinsi <span class="text-red-500">*</span></label>
+                <select required class="prov-select w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl outline-none focus:border-blue-600 text-xs font-bold transition-all shadow-sm cursor-pointer" onchange="loadCities(this)">
+                    <option value="" disabled selected>Memuat Provinsi...</option>
+                </select>
+            </div>
+            <div>
+                <label class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">Kota / Kabupaten <span class="text-red-500">*</span></label>
+                <select required class="city-select w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl outline-none focus:border-blue-600 text-xs font-bold transition-all shadow-sm cursor-pointer" onchange="loadDistricts(this)">
+                    <option value="" disabled selected>Pilih Provinsi Dulu</option>
+                </select>
+            </div>
+            <div>
+                <label class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">Kecamatan <span class="text-red-500">*</span></label>
+                <select required class="dist-select w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl outline-none focus:border-blue-600 text-xs font-bold transition-all shadow-sm cursor-pointer" onchange="loadVillages(this)">
+                    <option value="" disabled selected>Pilih Kota Dulu</option>
+                </select>
+            </div>
+            <div>
+                <label class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">Kelurahan / Desa <span class="text-red-500">*</span></label>
+                <select required class="vill-select w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl outline-none focus:border-blue-600 text-xs font-bold transition-all shadow-sm cursor-pointer">
+                    <option value="" disabled selected>Pilih Kecamatan Dulu</option>
+                </select>
+            </div>
+            <div class="md:col-span-2">
+                <label class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">Kode Pos <span class="text-red-500">*</span></label>
+                <input required type="number" class="w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl outline-none focus:border-blue-600 text-xs font-bold transition-all shadow-sm">
+            </div>
+        </div>
+    `;
+            container.appendChild(newDiv);
+
+            const newProvSelect = newDiv.querySelector('.prov-select');
+            loadProvinces(newProvSelect);
+        }
+
+        // Fungsi Tambah PIC Dinamis
+        function addPicField() {
+            const container = document.getElementById('pic-container');
+            const newDiv = document.createElement('div');
+            newDiv.className = "bg-gray-50/50 p-5 rounded-[2rem] border border-gray-100 space-y-4 relative animate-[fadeIn_0.2s_ease-out]";
+            newDiv.innerHTML = `
+                <div class="absolute top-4 right-5">
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-[9px] font-black text-red-500 hover:text-red-700 uppercase tracking-widest flex items-center gap-1 bg-red-50 px-3 py-1.5 rounded-xl"><i class="fa-solid fa-trash"></i> Hapus PIC</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4">
+                    <div>
+                        <label class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">Nama PIC</label>
+                        <input type="text" class="w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl outline-none focus:border-blue-600 text-xs font-bold transition-all">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">Jabatan</label>
+                        <select class="w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl outline-none focus:border-blue-600 text-xs font-bold text-gray-700 transition-all cursor-pointer">
+                            <option value="" disabled selected>Pilih Jabatan...</option>
+                            <option value="Owner">Owner / Pemilik</option>
+                            <option value="Director">Direktur</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Supervisor">Supervisor</option>
+                            <option value="Staff">Staff / Admin</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">No. Telepon / WA</label>
+                        <input type="text" class="w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl outline-none focus:border-blue-600 text-xs font-bold transition-all" placeholder="0812...">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black text-gray-500 block mb-2 uppercase tracking-wide">Email</label>
+                        <input type="email" class="w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl outline-none focus:border-blue-600 text-xs font-bold transition-all" placeholder="email@domain.com">
+                    </div>
+                </div>
+            `;
+            container.appendChild(newDiv);
+        }
     </script>
 </body>
+
 </html>
